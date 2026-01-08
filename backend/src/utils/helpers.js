@@ -95,13 +95,17 @@ export function calculateTotalMinutes(entrada1, saida1, entrada2, saida2) {
     if (entrada1 && saida1) {
         const [h1, m1] = entrada1.split(':').map(Number);
         const [h2, m2] = saida1.split(':').map(Number);
-        total += (h2 * 60 + m2) - (h1 * 60 + m1);
+        let diff = (h2 * 60 + m2) - (h1 * 60 + m1);
+        if (diff < 0) diff += 1440; // Midnight crossing (add 24h)
+        total += diff;
     }
 
     if (entrada2 && saida2) {
         const [h1, m1] = entrada2.split(':').map(Number);
         const [h2, m2] = saida2.split(':').map(Number);
-        total += (h2 * 60 + m2) - (h1 * 60 + m1);
+        let diff = (h2 * 60 + m2) - (h1 * 60 + m1);
+        if (diff < 0) diff += 1440; // Midnight crossing (add 24h)
+        total += diff;
     }
 
     return total;

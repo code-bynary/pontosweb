@@ -1,12 +1,12 @@
 # PontosWeb 🕒
 
-[![Version](https://img.shields.io/badge/version-1.3.2--stable-green.svg)](https://github.com/code-bynary/pontosweb/releases/latest)
+[![Version](https://img.shields.io/badge/version-1.3.3--stable-green.svg)](https://github.com/code-bynary/pontosweb/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Sistema moderno e eficiente para controle de ponto eletrônico, desenvolvido especificamente para processar arquivos de exportação de relógios biométricos.
 
 > [!IMPORTANT]
-> **Versão 1.3.2 (Stable)**: Esta é a versão atualizada com correções críticas de cálculos e restauração total do ambiente.
+> **Versão 1.3.3 (Stable)**: Hotfix crítico para tratamento de batidas noturnas e virada de fuso horário.
 
 ---
 
@@ -19,6 +19,10 @@ Sistema moderno e eficiente para controle de ponto eletrônico, desenvolvido esp
 ---
 
 ## 📋 Changelog Recente
+
+### [v1.3.3] - Hotfix (2026-01-08)
+- **Fix Timezone**: Corrigido agrupamento de batidas usando horário local (evita que batidas após as 21:00 pulem para o dia seguinte).
+- **Fix Meia-Noite**: Adicionado suporte para cálculos de jornadas que cruzam a meia-noite.
 
 ### [v1.3.2] - Stable Release (2026-01-08)
 - **Fix Cálculos**: Corrigido erro de "NaN" nos relatórios mensais ao alinhar campos do servidor com o banco de dados.
@@ -60,7 +64,7 @@ chmod +x install-debian.sh
 
 ---
 
-© 2026 PontosWeb - Versão Estável 1.3.2
+© 2026 PontosWeb - Versão Estável 1.3.3
 
 ## 📋 Funcionalidades
 
@@ -275,7 +279,7 @@ O projeto segue [Semantic Versioning](https://semver.org/):
 - **MINOR**: Novas funcionalidades (compatíveis)
 - **PATCH**: Correções de bugs
 
-**Versão Atual**: v1.3.2
+**Versão Atual**: v1.3.3
 
 Ver todas as versões: [Releases](https://github.com/code-bynary/pontosweb/releases)
 

@@ -101,14 +101,19 @@ export async function generateWorkdays(employeeId, startDate, endDate) {
         }
     });
 
-    // Group by date
+    // Group by local date (avoiding UTC shift)
     const punchesByDate = {};
     punches.forEach(punch => {
-        const date = punch.dateTime.toISOString().split('T')[0];
-        if (!punchesByDate[date]) {
-            punchesByDate[date] = [];
+        const d = new Date(punch.dateTime);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const dateKey = `${year}-${month}-${day}`;
+
+        if (!punchesByDate[dateKey]) {
+            punchesByDate[dateKey] = [];
         }
-        punchesByDate[date].push(punch);
+        punchesByDate[dateKey].push(punch);
     });
 
     // Generate workday for each date
