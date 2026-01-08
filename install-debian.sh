@@ -296,7 +296,7 @@ After=network.target
 Type=simple
 User=$USER
 WorkingDirectory=$INSTALL_DIR/frontend
-ExecStart=/usr/bin/npm run dev
+ExecStart=/usr/bin/npm run dev -- --host 0.0.0.0
 Restart=on-failure
 
 [Install]

@@ -9,11 +9,15 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors({
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173'
-}));
+app.use(cors()); // Allow all origins for easier remote access
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Simple logger
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+});
 
 // Routes
 app.use('/api/upload', uploadRoutes);
