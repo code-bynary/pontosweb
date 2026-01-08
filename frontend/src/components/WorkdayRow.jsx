@@ -3,6 +3,7 @@ import { updateWorkday } from '../services/api';
 import StatusBadge from './StatusBadge';
 
 const formatMinutes = (total) => {
+    if (total === undefined || total === null || isNaN(total)) return '00:00';
     const absolute = Math.abs(total);
     const hours = Math.floor(absolute / 60);
     const minutes = absolute % 60;

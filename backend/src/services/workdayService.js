@@ -31,9 +31,9 @@ export async function getMonthlyTimecard(employeeId, year, month) {
     });
 
     // Calculate total hours
-    const totalMinutes = workdays.reduce((sum, wd) => sum + wd.totalMinutes, 0);
-    const totalHours = Math.floor(totalMinutes / 60);
-    const totalMins = totalMinutes % 60;
+    const workedMinutes = workdays.reduce((sum, wd) => sum + wd.workedMinutes, 0);
+    const totalHours = Math.floor(workedMinutes / 60);
+    const totalMins = workedMinutes % 60;
 
     return {
         employee: {
@@ -49,11 +49,14 @@ export async function getMonthlyTimecard(employeeId, year, month) {
             saida1: formatTime(wd.saida1),
             entrada2: formatTime(wd.entrada2),
             saida2: formatTime(wd.saida2),
-            totalMinutes: wd.totalMinutes,
-            totalHours: `${Math.floor(wd.totalMinutes / 60)}:${String(wd.totalMinutes % 60).padStart(2, '0')}`,
+            workedMinutes: wd.workedMinutes,
+            expectedMinutes: wd.expectedMinutes,
+            extraMinutes: wd.extraMinutes,
+            balanceMinutes: wd.balanceMinutes,
+            totalHours: `${Math.floor(wd.workedMinutes / 60)}:${String(wd.workedMinutes % 60).padStart(2, '0')}`,
             status: wd.status
         })),
-        totalMinutes,
+        totalMinutes: workedMinutes,
         totalHours: `${totalHours}:${String(totalMins).padStart(2, '0')}`
     };
 }
@@ -99,7 +102,7 @@ export async function updateWorkday(workdayId, updates, reason = null, createdBy
     const entrada2 = updateData.entrada2 !== undefined ? formatTime(updateData.entrada2) : formatTime(workday.entrada2);
     const saida2 = updateData.saida2 !== undefined ? formatTime(updateData.saida2) : formatTime(workday.saida2);
 
-    updateData.totalMinutes = calculateTotalMinutes(entrada1, saida1, entrada2, saida2);
+    updateData.workedMinutes = calculateTotalMinutes(entrada1, saida1, entrada2, saida2);
     updateData.status = 'EDITED';
 
     // Update workday and create adjustments in transaction
