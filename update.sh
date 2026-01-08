@@ -151,7 +151,10 @@ if systemctl is-active --quiet pontosweb-frontend; then
     print_success "Frontend parado"
 fi
 
-# Ou matar processos se estiver rodando em desenvolvimento
+# Ou matar processos se estiver rodando em desenvolvimento ou travado
+print_info "Limpando portas e processos antigos..."
+sudo fuser -k 3001/tcp 2>/dev/null || true
+sudo fuser -k 5173/tcp 2>/dev/null || true
 pkill -f "node.*backend" 2>/dev/null || true
 pkill -f "node.*frontend" 2>/dev/null || true
 

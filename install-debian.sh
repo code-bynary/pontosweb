@@ -86,7 +86,7 @@ echo ""
 # 2. Instalar dependências básicas
 ###############################################################################
 print_info "2/10 - Instalando dependências básicas..."
-sudo apt install -y curl wget git build-essential
+sudo apt install -y curl wget git build-essential psmisc
 print_success "Dependências básicas instaladas!"
 echo ""
 
