@@ -89,10 +89,10 @@ sudo apt install -y curl wget git build-essential
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt install -y nodejs
 
-# Instalar MySQL
-sudo apt install -y mysql-server
-sudo systemctl start mysql
-sudo systemctl enable mysql
+# Instalar MySQL/MariaDB
+sudo apt install -y default-mysql-server
+sudo systemctl start mariadb
+sudo systemctl enable mariadb
 ```
 
 ### 2. Configurar MySQL
