@@ -9,18 +9,27 @@ export function parsePunchFile(fileContent) {
     const records = [];
     const errors = [];
 
-    // Skip header line
-    for (let i = 1; i < lines.length; i++) {
+    // Start from line 0 and detect data lines
+    for (let i = 0; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line) continue;
+
+        // Skip header lines or separator lines silently
+        if (line.toLowerCase().startsWith('no\t') || line.startsWith('---') || line.toLowerCase().includes('total')) {
+            continue;
+        }
 
         try {
             // Split by tabs
             const parts = line.split('\t').map(p => p.trim());
 
             // Expected format: No, Mchn, EnNo, Name, Mode, IOMd, DateTime
+            // Minimal check: we need at least EnNo, Name and Date (usually 7 parts)
             if (parts.length < 7) {
-                errors.push({ line: i + 1, error: 'Invalid format - expected 7 fields', content: line });
+                // Only log as error if it's not a known noise line
+                if (parts.length > 2) {
+                    errors.push({ line: i + 1, error: 'Invalid format - expected 7 fields', content: line });
+                }
                 continue;
             }
 
@@ -33,7 +42,10 @@ export function parsePunchFile(fileContent) {
             const dateTimeStr = parts[6];
 
             // Validate required fields
-            if (!enNo || !name || isNaN(ioMode)) {
+            if (!enNo || !name || isNaN(ioMode) || !dateTimeStr) {
+                // If it looks like a header but failed the length check, skip silently
+                if (enNo === 'EnNo') continue;
+
                 errors.push({ line: i + 1, error: 'Missing required fields', content: line });
                 continue;
             }
