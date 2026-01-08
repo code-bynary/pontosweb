@@ -1,6 +1,11 @@
 # PontosWeb 🕐
 
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/code-bynary/pontosweb/releases/tag/v1.0.0)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 Sistema completo de controle de ponto eletrônico com importação de arquivos TXT, processamento automático de batidas, geração de jornadas diárias e exportação de relatórios.
+
+> **Versão Atual**: v1.0.0 - [Ver Releases](https://github.com/code-bynary/pontosweb/releases)
 
 ## 📋 Funcionalidades
 
@@ -204,6 +209,88 @@ GET /api/export/excel/:employeeId/:month      # Download Excel
 4. **Exportar Relatórios**
    - No cartão de ponto, clique em "Exportar PDF" ou "Exportar Excel"
    - O arquivo será baixado automaticamente
+
+## 🔄 Versionamento e Atualizações
+
+### Versões Disponíveis
+
+O projeto segue [Semantic Versioning](https://semver.org/):
+- **MAJOR.MINOR.PATCH** (ex: v1.0.0)
+- **MAJOR**: Mudanças incompatíveis
+- **MINOR**: Novas funcionalidades (compatíveis)
+- **PATCH**: Correções de bugs
+
+**Versão Atual**: v1.0.0
+
+Ver todas as versões: [Releases](https://github.com/code-bynary/pontosweb/releases)
+
+### Instalar Versão Específica
+
+```bash
+# Clonar repositório
+git clone https://github.com/code-bynary/pontosweb.git
+cd pontosweb
+
+# Listar versões disponíveis
+git tag -l
+
+# Instalar versão específica (ex: v1.0.0)
+git checkout v1.0.0
+
+# Executar instalação
+./install-debian.sh
+```
+
+### Atualizar Sistema
+
+O sistema inclui script de atualização automática com backup:
+
+```bash
+cd ~/pontosweb
+./update.sh
+```
+
+**O que o script faz:**
+1. ✅ Backup automático do sistema (`~/backup/sys`)
+2. ✅ Backup automático do banco de dados (`~/backup/db`)
+3. ✅ Mantém últimos 5 backups
+4. ✅ Atualiza código do GitHub
+5. ✅ Instala novas dependências
+6. ✅ Executa migrations do banco
+7. ✅ Reinicia serviços
+
+### Restaurar Backup
+
+Se algo der errado após atualização:
+
+```bash
+cd ~/pontosweb
+./restore.sh
+```
+
+Menu interativo permite restaurar:
+- Sistema (arquivos)
+- Banco de dados
+- Ambos
+
+### Estratégia de Branches
+
+- `main` - Produção (sempre estável)
+- `develop` - Desenvolvimento e testes
+- `feature/*` - Novas funcionalidades
+- `hotfix/*` - Correções urgentes
+
+### Changelog
+
+#### v1.0.0 (2026-01-08)
+- 🎉 Release inicial
+- ✅ Sistema completo de controle de ponto
+- ✅ Importação de arquivos TXT
+- ✅ Geração de jornadas diárias
+- ✅ Edição manual com histórico
+- ✅ Exportação PDF/Excel
+- ✅ Scripts de instalação e atualização
+- ✅ Documentação completa
 
 ## 🔮 Expansões Futuras
 

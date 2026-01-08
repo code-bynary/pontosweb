@@ -7,8 +7,27 @@ Guia completo para instalação do PontosWeb em servidor Debian 12.
 ### 1. Download do Script
 
 ```bash
+# Última versão (main branch)
 wget https://raw.githubusercontent.com/code-bynary/pontosweb/main/install-debian.sh
 chmod +x install-debian.sh
+```
+
+**Ou instalar versão específica:**
+
+```bash
+# Clonar repositório
+git clone https://github.com/code-bynary/pontosweb.git
+cd pontosweb
+
+# Ver versões disponíveis
+git tag -l
+
+# Selecionar versão (ex: v1.0.0)
+git checkout v1.0.0
+
+# Executar instalação
+chmod +x install-debian.sh
+./install-debian.sh
 ```
 
 ### 2. Executar Instalação
