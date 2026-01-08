@@ -126,13 +126,23 @@ echo ""
 ###############################################################################
 print_info "5/10 - Configurando banco de dados..."
 
-# Criar banco de dados e usuário
-mysql -u root -p"$MYSQL_ROOT_PASSWORD" <<EOF
-CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+# Prepare SQL commands
+SQL_COMMANDS="CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
 GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';
-FLUSH PRIVILEGES;
-EOF
+FLUSH PRIVILEGES;"
+
+# Try sudo mysql first (Debian default unix_socket)
+if sudo mysql -e "SELECT 1" &> /dev/null; then
+    print_info "Usando autenticação unix_socket (sudo)..."
+    echo "$SQL_COMMANDS" | sudo mysql
+elif [ -n "$MYSQL_ROOT_PASSWORD" ]; then
+    print_info "Usando autenticação por senha..."
+    echo "$SQL_COMMANDS" | mysql -u root -p"$MYSQL_ROOT_PASSWORD"
+else
+    print_info "Tentando acesso root sem senha..."
+    echo "$SQL_COMMANDS" | mysql -u root
+fi
 
 print_success "Banco de dados '$DB_NAME' criado!"
 print_success "Usuário '$DB_USER' criado!"
