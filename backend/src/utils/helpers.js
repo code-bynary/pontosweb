@@ -39,9 +39,18 @@ export function parsePunchFile(fileContent) {
             }
 
             // Parse datetime - format: 2025/12/01  07:41:00
-            // Replace / with - and handle multiple spaces
-            const normalizedDateTime = dateTimeStr.replace(/\//g, '-').replace(/\s+/g, ' ').trim();
-            const dateTime = new Date(normalizedDateTime);
+            // Split date and time manually to avoid timezone shifts
+            const dtParts = dateTimeStr.trim().split(/\s+/);
+            if (dtParts.length < 2) {
+                errors.push({ line: i + 1, error: `Invalid datetime format: ${dateTimeStr}`, content: line });
+                continue;
+            }
+
+            const [datePart, timePart] = dtParts;
+            const [y, mo, d] = datePart.split(/[\/-]/).map(Number);
+            const [h, mi, s] = timePart.split(':').map(Number);
+
+            const dateTime = new Date(y, mo - 1, d, h, mi, s || 0);
 
             if (isNaN(dateTime.getTime())) {
                 errors.push({ line: i + 1, error: `Invalid datetime: ${dateTimeStr}`, content: line });

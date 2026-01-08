@@ -167,7 +167,7 @@ async function createWorkdayFromPunches(employeeId, date, punches) {
         where: {
             employeeId_date: {
                 employeeId,
-                date: new Date(date)
+                date: new Date(new Date(date).getFullYear(), new Date(date).getMonth(), new Date(date).getDate())
             }
         },
         update: {
@@ -180,7 +180,7 @@ async function createWorkdayFromPunches(employeeId, date, punches) {
         },
         create: {
             employeeId,
-            date: new Date(date),
+            date: new Date(new Date(date).getFullYear(), new Date(date).getMonth(), new Date(date).getDate()),
             entrada1,
             saida1,
             entrada2,
