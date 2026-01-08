@@ -145,14 +145,44 @@ async function createWorkdayFromPunches(employeeId, date, punches) {
     const entrada2 = sorted[2] ? sorted[2].dateTime : null;
     const saida2 = sorted[3] ? sorted[3].dateTime : null;
 
-    // Calculate total minutes
-    let totalMinutes = 0;
+    // Calculate worked minutes
+    let workedMinutes = 0;
     if (entrada1 && saida1) {
-        totalMinutes += Math.floor((saida1 - entrada1) / 60000);
+        workedMinutes += Math.floor((saida1 - entrada1) / 60000);
     }
     if (entrada2 && saida2) {
-        totalMinutes += Math.floor((saida2 - entrada2) / 60000);
+        workedMinutes += Math.floor((saida2 - entrada2) / 60000);
     }
+
+    // Get employee schedule for calculations
+    const employee = await prisma.employee.findUnique({
+        where: { id: employeeId },
+        select: { workStart1: true, workEnd1: true, workStart2: true, workEnd2: true }
+    });
+
+    // Calculate expected minutes from schedule
+    let expectedMinutes = 0;
+    const parseTimeToMinutes = (timeStr) => {
+        if (!timeStr) return 0;
+        const [h, m] = timeStr.split(':').map(Number);
+        return h * 60 + m;
+    };
+
+    if (employee) {
+        const s1 = parseTimeToMinutes(employee.workStart1);
+        const e1 = parseTimeToMinutes(employee.workEnd1);
+        const s2 = parseTimeToMinutes(employee.workStart2);
+        const e2 = parseTimeToMinutes(employee.workEnd2);
+
+        if (e1 > s1) expectedMinutes += (e1 - s1);
+        if (e2 > s2) expectedMinutes += (e2 - s2);
+    }
+
+    // Calculate balance and extra
+    // Simple logic: if worked > expected, the difference is extra. 
+    // Balance is always worked - expected.
+    const balanceMinutes = workedMinutes - expectedMinutes;
+    const extraMinutes = balanceMinutes > 0 ? balanceMinutes : 0;
 
     // Determine status
     let status = 'INCOMPLETE';
@@ -190,7 +220,10 @@ async function createWorkdayFromPunches(employeeId, date, punches) {
             saida1,
             entrada2,
             saida2,
-            totalMinutes,
+            workedMinutes,
+            expectedMinutes,
+            extraMinutes,
+            balanceMinutes,
             status
         },
         create: {
@@ -200,7 +233,10 @@ async function createWorkdayFromPunches(employeeId, date, punches) {
             saida1,
             entrada2,
             saida2,
-            totalMinutes,
+            workedMinutes,
+            expectedMinutes,
+            extraMinutes,
+            balanceMinutes,
             status
         }
     });
