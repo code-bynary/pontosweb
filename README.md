@@ -119,23 +119,25 @@ O frontend estará rodando em `http://localhost:5173`
 
 ## 📝 Formato do Arquivo TXT
 
-O sistema espera arquivos TXT com o seguinte formato:
+O sistema espera arquivos TXT com campos delimitados por **TAB** no seguinte formato:
 
 ```
-EnNo    Name            IOMd    DateTime
-001     João Silva      0       2026-01-08 08:00:00
-001     João Silva      1       2026-01-08 12:00:00
-001     João Silva      0       2026-01-08 13:00:00
-001     João Silva      1       2026-01-08 17:00:00
-002     Maria Santos    0       2026-01-08 08:15:00
-002     Maria Santos    1       2026-01-08 12:10:00
+No	Mchn	EnNo		Name		Mode	IOMd	DateTime	
+000001	1	000000052	Henrique      	1	0	2025/12/01  07:41:00
+000002	1	000000097	Thais         	1	0	2025/12/01  07:45:00
+000003	1	000000001	Elza Matos    	2	0	2025/12/01  07:47:00
+000016	1	000000001	Elza Matos    	2	1	2025/12/01  12:00:00
+000017	1	000000052	Henrique      	1	1	2025/12/01  12:00:00
 ```
 
-**Campos:**
-- `EnNo`: ID do funcionário no relógio de ponto
+**Campos (separados por TAB):**
+- `No`: Número sequencial do registro
+- `Mchn`: ID da máquina/relógio de ponto
+- `EnNo`: ID do funcionário (matrícula)
 - `Name`: Nome do funcionário
-- `IOMd`: Modo (0 = Entrada, 1 = Saída)
-- `DateTime`: Data e hora da batida
+- `Mode`: Tipo/categoria do funcionário (1, 2, etc.)
+- `IOMd`: Modo de entrada/saída (0 = Entrada, 1 = Saída)
+- `DateTime`: Data e hora da batida (formato: YYYY/MM/DD HH:MM:SS)
 
 ## 🔌 API Endpoints
 
@@ -169,7 +171,7 @@ GET /api/export/excel/:employeeId/:month      # Download Excel
 ## 💾 Modelo de Dados
 
 ### Employee (Funcionário)
-- `id`, `enNo`, `name`, `createdAt`, `updatedAt`
+- `id`, `enNo`, `name`, `mode` (tipo/categoria), `createdAt`, `updatedAt`
 
 ### Punch (Batida)
 - `id`, `employeeId`, `ioMode`, `dateTime`, `imported`, `createdAt`

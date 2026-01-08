@@ -21,8 +21,15 @@ export async function importPunchFile(fileContent) {
                 employee = await prisma.employee.create({
                     data: {
                         enNo: record.enNo,
-                        name: record.name
+                        name: record.name,
+                        mode: record.mode
                     }
+                });
+            } else if (record.mode !== null && employee.mode !== record.mode) {
+                // Update mode if it changed
+                employee = await prisma.employee.update({
+                    where: { id: employee.id },
+                    data: { mode: record.mode }
                 });
             }
 

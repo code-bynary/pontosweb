@@ -1,8 +1,8 @@
 /**
  * Parse TXT file from biometric punch clock
- * Expected format:
- * EnNo    Name            IOMd    DateTime
- * 001     João Silva      0       2026-01-08 08:00:00
+ * Expected format (tab-delimited):
+ * No	Mchn	EnNo		Name		Mode	IOMd	DateTime
+ * 000001	1	000000052	Henrique      	1	0	2025/12/01  07:41:00
  */
 export function parsePunchFile(fileContent) {
     const lines = fileContent.split('\n').filter(line => line.trim());
@@ -15,38 +15,45 @@ export function parsePunchFile(fileContent) {
         if (!line) continue;
 
         try {
-            // Split by multiple spaces or tabs
-            const parts = line.split(/\s+/);
+            // Split by tabs
+            const parts = line.split('\t').map(p => p.trim());
 
-            if (parts.length < 4) {
-                errors.push({ line: i + 1, error: 'Invalid format', content: line });
+            // Expected format: No, Mchn, EnNo, Name, Mode, IOMd, DateTime
+            if (parts.length < 7) {
+                errors.push({ line: i + 1, error: 'Invalid format - expected 7 fields', content: line });
                 continue;
             }
 
-            const enNo = parts[0];
-            const ioMode = parseInt(parts[parts.length - 3]);
-            const dateStr = parts[parts.length - 2];
-            const timeStr = parts[parts.length - 1];
+            const no = parts[0];
+            const mchn = parts[1];
+            const enNo = parts[2];
+            const name = parts[3];
+            const mode = parseInt(parts[4]);
+            const ioMode = parseInt(parts[5]);
+            const dateTimeStr = parts[6];
 
-            // Name is everything between enNo and ioMode
-            const name = parts.slice(1, parts.length - 3).join(' ');
-
-            // Validate
-            if (!enNo || !name || isNaN(ioMode) || !dateStr || !timeStr) {
+            // Validate required fields
+            if (!enNo || !name || isNaN(ioMode)) {
                 errors.push({ line: i + 1, error: 'Missing required fields', content: line });
                 continue;
             }
 
-            // Parse datetime
-            const dateTime = new Date(`${dateStr} ${timeStr}`);
+            // Parse datetime - format: 2025/12/01  07:41:00
+            // Replace / with - and handle multiple spaces
+            const normalizedDateTime = dateTimeStr.replace(/\//g, '-').replace(/\s+/g, ' ').trim();
+            const dateTime = new Date(normalizedDateTime);
+
             if (isNaN(dateTime.getTime())) {
-                errors.push({ line: i + 1, error: 'Invalid datetime', content: line });
+                errors.push({ line: i + 1, error: `Invalid datetime: ${dateTimeStr}`, content: line });
                 continue;
             }
 
             records.push({
+                no,
+                mchn,
                 enNo: enNo.trim(),
                 name: name.trim(),
+                mode: isNaN(mode) ? null : mode,
                 ioMode,
                 dateTime
             });
