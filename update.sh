@@ -163,13 +163,16 @@ echo ""
 ###############################################################################
 print_info "4/6 - Atualizando código do GitHub..."
 
+# Tentar voltar para a branch main se estiver em uma tag ou branch errada
+git checkout main 2>/dev/null || print_warning "Não foi possível mudar para branch main automaticamente."
+
 # Salvar mudanças locais (se houver)
 if [ -n "$(git status --porcelain)" ]; then
     print_warning "Há mudanças locais. Salvando em stash..."
     git stash
 fi
 
-# Atualizar código
+# Puxar atualizações
 git pull origin main
 
 print_success "Código atualizado!"
@@ -188,11 +191,12 @@ npm install
 
 # Gerar Prisma Client
 print_info "Gerando Prisma Client..."
-npm run prisma:generate
+npx prisma generate
 
-# Executar migrations
-print_info "Executando migrations do banco..."
-npm run prisma:migrate
+# Executar migrations de forma não interativa
+print_info "Executando migrations do banco (isso pode levar alguns segundos)..."
+# Usamos npx diretamente para garantir as flags corretas
+npx prisma migrate dev --name update --skip-generate
 
 cd ..
 
