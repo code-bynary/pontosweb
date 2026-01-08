@@ -163,6 +163,21 @@ async function createWorkdayFromPunches(employeeId, date, punches) {
     // Create or update workday
     const workdayDate = new Date(date + 'T00:00:00Z');
 
+    // Check if workday exists and is manually edited
+    const existingWorkday = await prisma.workday.findUnique({
+        where: {
+            employeeId_date: {
+                employeeId,
+                date: workdayDate
+            }
+        }
+    });
+
+    if (existingWorkday && existingWorkday.status === 'EDITED') {
+        // Skip updating times for manually edited records to preserve user changes
+        return existingWorkday;
+    }
+
     const workday = await prisma.workday.upsert({
         where: {
             employeeId_date: {
