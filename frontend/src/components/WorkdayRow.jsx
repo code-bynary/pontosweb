@@ -2,6 +2,14 @@ import { useState } from 'react';
 import { updateWorkday } from '../services/api';
 import StatusBadge from './StatusBadge';
 
+const formatMinutes = (total) => {
+    const absolute = Math.abs(total);
+    const hours = Math.floor(absolute / 60);
+    const minutes = absolute % 60;
+    const sign = total < 0 ? '-' : '';
+    return `${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+};
+
 export default function WorkdayRow({ workday, onUpdate }) {
     const [editing, setEditing] = useState(false);
     const [values, setValues] = useState({
@@ -100,6 +108,15 @@ export default function WorkdayRow({ workday, onUpdate }) {
                 )}
             </td>
             <td className="font-medium">{workday.totalHours}</td>
+            <td className="text-gray-600 text-sm">
+                {formatMinutes(workday.expectedMinutes)}
+            </td>
+            <td className={workday.extraMinutes > 0 ? 'text-green-600 font-medium' : 'text-gray-400'}>
+                {workday.extraMinutes > 0 ? `+${formatMinutes(workday.extraMinutes)}` : '-'}
+            </td>
+            <td className={`font-bold ${workday.balanceMinutes >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {workday.balanceMinutes > 0 ? '+' : ''}{formatMinutes(workday.balanceMinutes)}
+            </td>
             <td>
                 <StatusBadge status={workday.status} />
             </td>

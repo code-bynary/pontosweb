@@ -47,7 +47,7 @@ export default function UploadPage() {
                         <p className="text-center text-gray-500">Carregando funcionários...</p>
                     </div>
                 ) : (
-                    <EmployeeList employees={employees} />
+                    <EmployeeList employees={employees} onUpdate={loadEmployees} />
                 )}
             </div>
         </div>

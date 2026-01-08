@@ -1,8 +1,11 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import EditScheduleModal from './EditScheduleModal';
 
-export default function EmployeeList({ employees }) {
+export default function EmployeeList({ employees, onUpdate }) {
     const navigate = useNavigate();
+    const [selectedEmployee, setSelectedEmployee] = useState(null);
 
     const handleViewTimecard = (employeeId) => {
         const currentMonth = format(new Date(), 'yyyy-MM');
@@ -41,18 +44,36 @@ export default function EmployeeList({ employees }) {
                                             : '-'}
                                     </td>
                                     <td>
-                                        <button
-                                            onClick={() => handleViewTimecard(employee.id)}
-                                            className="btn btn-primary text-sm"
-                                        >
-                                            Ver Cartão
-                                        </button>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() => handleViewTimecard(employee.id)}
+                                                className="btn btn-primary text-sm"
+                                            >
+                                                Ver Cartão
+                                            </button>
+                                            <button
+                                                onClick={() => setSelectedEmployee(employee)}
+                                                className="btn btn-secondary text-sm p-2"
+                                                title="Configurar Horário"
+                                            >
+                                                ⚙️
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
+            )}
+
+            {selectedEmployee && (
+                <EditScheduleModal
+                    isOpen={!!selectedEmployee}
+                    onClose={() => setSelectedEmployee(null)}
+                    employee={selectedEmployee}
+                    onUpdate={onUpdate}
+                />
             )}
         </div>
     );

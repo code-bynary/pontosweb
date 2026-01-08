@@ -141,7 +141,10 @@ export default function TimecardPage() {
                                     <th>Saída 1</th>
                                     <th>Entrada 2</th>
                                     <th>Saída 2</th>
-                                    <th>Total</th>
+                                    <th>Trabalhado</th>
+                                    <th>Previsto</th>
+                                    <th>Extra</th>
+                                    <th>Saldo</th>
                                     <th>Status</th>
                                     <th>Ações</th>
                                 </tr>
@@ -158,13 +161,45 @@ export default function TimecardPage() {
                         </table>
                     </div>
 
-                    {/* Total hours */}
-                    <div className="mt-6 pt-6 border-t border-gray-200">
-                        <div className="flex justify-end">
-                            <div className="text-right">
-                                <p className="text-gray-600">Total do Mês</p>
-                                <p className="text-3xl font-bold text-primary-600">
+                    {/* Total hours and Balance Summary */}
+                    <div className="mt-8 pt-6 border-t border-gray-200">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                                <p className="text-gray-600 text-sm uppercase tracking-wider font-semibold">Total Previsto</p>
+                                <p className="text-2xl font-bold text-gray-800">
+                                    {(() => {
+                                        const total = timecard.workdays.reduce((acc, curr) => acc + curr.expectedMinutes, 0);
+                                        const h = Math.floor(total / 60);
+                                        const m = total % 60;
+                                        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+                                    })()}h
+                                </p>
+                            </div>
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                                <p className="text-gray-600 text-sm uppercase tracking-wider font-semibold">Total Trabalhado</p>
+                                <p className="text-2xl font-bold text-primary-600">
                                     {timecard.totalHours}h
+                                </p>
+                            </div>
+                            <div className={`p-4 rounded-lg ${(() => {
+                                    const total = timecard.workdays.reduce((acc, curr) => acc + curr.balanceMinutes, 0);
+                                    return total >= 0 ? 'bg-green-50' : 'bg-red-50';
+                                })()
+                                }`}>
+                                <p className="text-gray-600 text-sm uppercase tracking-wider font-semibold">Saldo Final</p>
+                                <p className={`text-2xl font-bold ${(() => {
+                                        const total = timecard.workdays.reduce((acc, curr) => acc + curr.balanceMinutes, 0);
+                                        return total >= 0 ? 'text-green-600' : 'text-red-600';
+                                    })()
+                                    }`}>
+                                    {(() => {
+                                        const total = timecard.workdays.reduce((acc, curr) => acc + curr.balanceMinutes, 0);
+                                        const absolute = Math.abs(total);
+                                        const h = Math.floor(absolute / 60);
+                                        const m = absolute % 60;
+                                        const sign = total < 0 ? '-' : '+';
+                                        return `${sign}${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+                                    })()}h
                                 </p>
                             </div>
                         </div>
