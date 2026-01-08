@@ -104,16 +104,20 @@ fi
 echo ""
 
 ###############################################################################
-# 4. Instalar MySQL Server
+# 4. Instalar MySQL/MariaDB Server
 ###############################################################################
-print_info "4/10 - Instalando MySQL Server..."
+print_info "4/10 - Instalando MySQL/MariaDB Server..."
 if ! command -v mysql &> /dev/null; then
-    sudo apt install -y mysql-server
-    sudo systemctl start mysql
-    sudo systemctl enable mysql
-    print_success "MySQL Server instalado!"
+    # Debian 12 usa MariaDB como padrão
+    sudo apt install -y default-mysql-server || sudo apt install -y mariadb-server
+    
+    # Iniciar serviço (pode ser mysql ou mariadb dependendo da instalação)
+    sudo systemctl start mariadb 2>/dev/null || sudo systemctl start mysql
+    sudo systemctl enable mariadb 2>/dev/null || sudo systemctl enable mysql
+    
+    print_success "Servidor de Banco de Dados instalado!"
 else
-    print_warning "MySQL Server já está instalado"
+    print_warning "Servidor de Banco de Dados já está instalado"
 fi
 echo ""
 
