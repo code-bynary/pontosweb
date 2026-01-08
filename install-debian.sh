@@ -47,7 +47,7 @@ echo ""
 INSTALL_DIR="$HOME/pontosweb"
 DB_NAME="pontosweb"
 DB_USER="pontosweb_user"
-DB_PASSWORD=$(openssl rand -base64 12)  # Gera senha aleatória
+DB_PASSWORD="fac93482"   # <<< SENHA FIXA (DEV)
 REPO_URL="https://github.com/code-bynary/pontosweb.git"
 
 print_info "Diretório de instalação: $INSTALL_DIR"
@@ -66,7 +66,7 @@ DB_NAME="${input_db_name:-$DB_NAME}"
 read -p "Usuário do banco de dados [$DB_USER]: " input_db_user
 DB_USER="${input_db_user:-$DB_USER}"
 
-read -sp "Senha do MySQL root: " MYSQL_ROOT_PASSWORD
+read -sp "Senha do MySQL root (ENTER se usar sudo/unix_socket): " MYSQL_ROOT_PASSWORD
 echo ""
 echo ""
 
@@ -108,13 +108,9 @@ echo ""
 ###############################################################################
 print_info "4/10 - Instalando MySQL/MariaDB Server..."
 if ! command -v mysql &> /dev/null; then
-    # Debian 12 usa MariaDB como padrão
     sudo apt install -y default-mysql-server || sudo apt install -y mariadb-server
-    
-    # Iniciar serviço (pode ser mysql ou mariadb dependendo da instalação)
     sudo systemctl start mariadb 2>/dev/null || sudo systemctl start mysql
     sudo systemctl enable mariadb 2>/dev/null || sudo systemctl enable mysql
-    
     print_success "Servidor de Banco de Dados instalado!"
 else
     print_warning "Servidor de Banco de Dados já está instalado"
@@ -126,14 +122,12 @@ echo ""
 ###############################################################################
 print_info "5/10 - Configurando banco de dados..."
 
-# Prepare SQL commands
 SQL_COMMANDS="CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
-# Conceder permissões globais para permitir criação do shadow database do Prisma
+DROP USER IF EXISTS '$DB_USER'@'localhost';
+CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
 GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'localhost';
 FLUSH PRIVILEGES;"
 
-# Try sudo mysql first (Debian default unix_socket)
 if sudo mysql -e "SELECT 1" &> /dev/null; then
     print_info "Usando autenticação unix_socket (sudo)..."
     echo "$SQL_COMMANDS" | sudo mysql
@@ -145,8 +139,8 @@ else
     echo "$SQL_COMMANDS" | mysql -u root
 fi
 
-print_success "Banco de dados '$DB_NAME' criado!"
-print_success "Usuário '$DB_USER' criado!"
+print_success "Banco de dados '$DB_NAME' pronto!"
+print_success "Usuário '$DB_USER' configurado com senha fixa (DEV)!"
 echo ""
 
 ###############################################################################
@@ -169,33 +163,24 @@ echo ""
 print_info "7/10 - Configurando backend..."
 cd "$INSTALL_DIR/backend"
 
-# Instalar dependências
 print_info "Instalando dependências do backend..."
 npm install
 
-# Criar arquivo .env
 print_info "Criando arquivo .env..."
 cat > .env <<EOF
-# Database
 DATABASE_URL="mysql://$DB_USER:$DB_PASSWORD@localhost:3306/$DB_NAME"
-
-# Server
 PORT=3001
 NODE_ENV=production
-
-# CORS
 CORS_ORIGIN=http://localhost:5173
 EOF
 
 print_success "Arquivo .env criado!"
 
-# Gerar Prisma Client
 print_info "Gerando Prisma Client..."
 npm run prisma:generate
 
-# Executar migrations
-print_info "Executando migrations..."
-npm run prisma:migrate
+print_info "Executando migrations (isso pode levar alguns segundos)..."
+npx prisma migrate dev --name init --skip-generate
 
 print_success "Backend configurado!"
 echo ""
@@ -206,11 +191,9 @@ echo ""
 print_info "8/10 - Configurando frontend..."
 cd "$INSTALL_DIR/frontend"
 
-# Instalar dependências
 print_info "Instalando dependências do frontend..."
 npm install
 
-# Criar arquivo .env (opcional)
 cat > .env <<EOF
 VITE_API_URL=http://localhost:3001/api
 EOF
@@ -224,7 +207,6 @@ echo ""
 print_info "9/10 - Criando scripts de inicialização..."
 cd "$INSTALL_DIR"
 
-# Script para iniciar backend
 cat > start-backend.sh <<'EOF'
 #!/bin/bash
 cd "$(dirname "$0")/backend"
@@ -233,7 +215,6 @@ npm run dev
 EOF
 chmod +x start-backend.sh
 
-# Script para iniciar frontend
 cat > start-frontend.sh <<'EOF'
 #!/bin/bash
 cd "$(dirname "$0")/frontend"
@@ -242,29 +223,23 @@ npm run dev
 EOF
 chmod +x start-frontend.sh
 
-# Script para iniciar ambos (usando tmux)
 cat > start-all.sh <<'EOF'
 #!/bin/bash
 cd "$(dirname "$0")"
 
-# Verificar se tmux está instalado
 if ! command -v tmux &> /dev/null; then
     echo "Instalando tmux..."
     sudo apt install -y tmux
 fi
 
-# Criar sessão tmux
 tmux new-session -d -s pontosweb
 
-# Janela 1: Backend
 tmux rename-window -t pontosweb:0 'Backend'
 tmux send-keys -t pontosweb:0 'cd backend && npm run dev' C-m
 
-# Janela 2: Frontend
 tmux new-window -t pontosweb:1 -n 'Frontend'
 tmux send-keys -t pontosweb:1 'cd frontend && npm run dev' C-m
 
-# Anexar à sessão
 echo "PontosWeb iniciado em sessão tmux!"
 echo "Para acessar: tmux attach -t pontosweb"
 echo "Para sair: Ctrl+B, depois D"
@@ -277,7 +252,6 @@ tmux attach -t pontosweb
 EOF
 chmod +x start-all.sh
 
-# Script para parar tudo
 cat > stop-all.sh <<'EOF'
 #!/bin/bash
 echo "Parando PontosWeb..."
@@ -292,11 +266,10 @@ print_success "Scripts criados!"
 echo ""
 
 ###############################################################################
-# 10. Criar serviços systemd (opcional)
+# 10. Criar serviços systemd
 ###############################################################################
 print_info "10/10 - Criando serviços systemd..."
 
-# Backend service
 sudo tee /etc/systemd/system/pontosweb-backend.service > /dev/null <<EOF
 [Unit]
 Description=PontosWeb Backend
@@ -314,7 +287,6 @@ Environment=NODE_ENV=production
 WantedBy=multi-user.target
 EOF
 
-# Frontend service (para build de produção)
 sudo tee /etc/systemd/system/pontosweb-frontend.service > /dev/null <<EOF
 [Unit]
 Description=PontosWeb Frontend
@@ -331,7 +303,6 @@ Restart=on-failure
 WantedBy=multi-user.target
 EOF
 
-# Recarregar systemd
 sudo systemctl daemon-reload
 
 print_success "Serviços systemd criados!"
@@ -348,29 +319,17 @@ print_info "Informações do Sistema:"
 echo "  - Diretório: $INSTALL_DIR"
 echo "  - Banco de dados: $DB_NAME"
 echo "  - Usuário DB: $DB_USER"
-echo "  - Senha DB: $DB_PASSWORD"
+echo "  - Senha DB (DEV): $DB_PASSWORD"
 echo ""
 print_info "Para iniciar o sistema:"
-echo "  Opção 1 (Desenvolvimento - Recomendado):"
-echo "    cd $INSTALL_DIR"
-echo "    ./start-all.sh"
-echo ""
-echo "  Opção 2 (Serviços systemd - Produção):"
-echo "    sudo systemctl start pontosweb-backend"
-echo "    sudo systemctl start pontosweb-frontend"
-echo "    sudo systemctl enable pontosweb-backend  # Iniciar no boot"
-echo "    sudo systemctl enable pontosweb-frontend # Iniciar no boot"
+echo "  cd $INSTALL_DIR"
+echo "  ./start-all.sh"
 echo ""
 print_info "URLs de acesso:"
 echo "  - Backend API: http://localhost:3001"
 echo "  - Frontend: http://localhost:5173"
 echo "  - Health Check: http://localhost:3001/health"
 echo ""
-print_warning "IMPORTANTE: Guarde a senha do banco de dados em local seguro!"
-echo "  Senha: $DB_PASSWORD"
+print_warning "ATENÇÃO: senha fixa é apenas para DESENVOLVIMENTO."
 echo ""
-print_info "Logs:"
-echo "  - Backend: journalctl -u pontosweb-backend -f"
-echo "  - Frontend: journalctl -u pontosweb-frontend -f"
-echo ""
-print_success "Instalação finalizada! 🎉"
+print_success "Instalação finalizada! 🚀"
