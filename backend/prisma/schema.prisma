@@ -11,15 +11,22 @@ datasource db {
 }
 
 model Employee {
-  id        Int        @id @default(autoincrement())
-  enNo      String     @unique @db.VarChar(50)
-  name      String     @db.VarChar(255)
-  mode      Int?       // Employee type/category from punch clock
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id         Int        @id @default(autoincrement())
+  enNo       String     @unique @db.VarChar(50)
+  name       String     @db.VarChar(255)
+  mode       Int?       // Employee type/category from punch clock
   
-  punches   Punch[]
-  workdays  Workday[]
+  // Work schedule (HH:mm format suggested, stored as strings for simplicity in this schema)
+  workStart1 String?    @default("08:00") @db.VarChar(5)
+  workEnd1   String?    @default("12:00") @db.VarChar(5)
+  workStart2 String?    @default("13:00") @db.VarChar(5)
+  workEnd2   String?    @default("17:48") @db.VarChar(5)
+
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  
+  punches    Punch[]
+  workdays   Workday[]
   
   @@map("employees")
 }
@@ -40,17 +47,23 @@ model Punch {
 }
 
 model Workday {
-  id           Int      @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   employeeId   Int
-  date         DateTime @db.Date
+  date         DateTime  @db.Date
   entrada1     DateTime? @db.Time(0)
   saida1       DateTime? @db.Time(0)
   entrada2     DateTime? @db.Time(0)
   saida2       DateTime? @db.Time(0)
-  totalMinutes Int      @default(0)
-  status       Status   @default(INCOMPLETE)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  
+  // Calculations (in minutes)
+  workedMinutes   Int      @default(0)
+  expectedMinutes Int      @default(0)
+  extraMinutes    Int      @default(0)
+  balanceMinutes  Int      @default(0)
+  
+  status       Status    @default(INCOMPLETE)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
   
   employee     Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
   adjustments  Adjustment[]
