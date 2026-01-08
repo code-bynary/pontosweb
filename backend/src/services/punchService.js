@@ -44,12 +44,10 @@ export async function importPunchFile(fileContent) {
             if (!maxDate || record.dateTime > maxDate) maxDate = record.dateTime;
 
             // Create punch record (idempotent check)
-            const existingPunch = await prisma.punch.findUnique({
+            const existingPunch = await prisma.punch.findFirst({
                 where: {
-                    employeeId_dateTime: {
-                        employeeId: employee.id,
-                        dateTime: record.dateTime
-                    }
+                    employeeId: employee.id,
+                    dateTime: record.dateTime
                 }
             });
 
