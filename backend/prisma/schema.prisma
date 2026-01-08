@@ -27,13 +27,14 @@ model Employee {
 model Punch {
   id         Int      @id @default(autoincrement())
   employeeId Int
-  ioMode     Int      // 0 = entrada, 1 = saída
   dateTime   DateTime
-  imported   Boolean  @default(true)
+  ioMode     Int?     @default(0)
+  imported   Boolean  @default(false)
   createdAt  DateTime @default(now())
   
-  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employee   Employee @relation(fields: [employeeId], references: [id])
   
+  @@unique([employeeId, dateTime])
   @@index([employeeId, dateTime])
   @@map("punches")
 }

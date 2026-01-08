@@ -43,17 +43,27 @@ export async function importPunchFile(fileContent) {
             if (!minDate || record.dateTime < minDate) minDate = record.dateTime;
             if (!maxDate || record.dateTime > maxDate) maxDate = record.dateTime;
 
-            // Create punch record
-            await prisma.punch.create({
-                data: {
-                    employeeId: employee.id,
-                    ioMode: record.ioMode,
-                    dateTime: record.dateTime,
-                    imported: true
+            // Create punch record (idempotent check)
+            const existingPunch = await prisma.punch.findUnique({
+                where: {
+                    employeeId_dateTime: {
+                        employeeId: employee.id,
+                        dateTime: record.dateTime
+                    }
                 }
             });
 
-            processedCount++;
+            if (!existingPunch) {
+                await prisma.punch.create({
+                    data: {
+                        employeeId: employee.id,
+                        ioMode: record.ioMode,
+                        dateTime: record.dateTime,
+                        imported: true
+                    }
+                });
+                processedCount++;
+            }
         } catch (error) {
             importErrors.push({
                 record: record.enNo,
@@ -117,10 +127,21 @@ export async function generateWorkdays(employeeId, startDate, endDate) {
  * Create or update workday from punch records
  */
 async function createWorkdayFromPunches(employeeId, date, punches) {
-    // Sort punches by time
-    const sorted = punches.sort((a, b) => a.dateTime - b.dateTime);
+    // Deduplicate punches by timestamp (down to the second)
+    const uniqueMap = new Map();
+    punches.forEach(p => {
+        const timeKey = p.dateTime.getTime();
+        if (!uniqueMap.has(timeKey)) {
+            uniqueMap.set(timeKey, p);
+        }
+    });
 
-    // Extract times
+    const uniquePunches = Array.from(uniqueMap.values());
+
+    // Sort punches by time
+    const sorted = uniquePunches.sort((a, b) => a.dateTime - b.dateTime);
+
+    // Extract times (taking first 4 unique punches)
     const entrada1 = sorted[0] ? sorted[0].dateTime : null;
     const saida1 = sorted[1] ? sorted[1].dateTime : null;
     const entrada2 = sorted[2] ? sorted[2].dateTime : null;
