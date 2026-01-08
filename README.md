@@ -1,11 +1,61 @@
-# PontosWeb 🕐
+# PontosWeb 🕒
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/code-bynary/pontosweb/releases/tag/v1.0.0)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-1.2.0--stable-green.svg)](https://github.com/code-bynary/pontosweb/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Sistema completo de controle de ponto eletrônico com importação de arquivos TXT, processamento automático de batidas, geração de jornadas diárias e exportação de relatórios.
+Sistema moderno e eficiente para controle de ponto eletrônico, desenvolvido especificamente para processar arquivos de exportação de relógios biométricos.
 
-> **Versão Atual**: v1.0.0 - [Ver Releases](https://github.com/code-bynary/pontosweb/releases)
+> [!IMPORTANT]
+> **Versão 1.2.0 (Stable)**: Esta é a primeira versão considerada 100% estável e funcional para uso em produção no Debian 12.
+
+---
+
+## 🛠️ Tecnologias
+
+- **Backend**: Node.js (Express), Prisma ORM, MySQL/MariaDB.
+- **Frontend**: React (Vite), Tailwind CSS, Headless UI.
+- **Relatórios**: PDFKit e ExcelJS.
+
+---
+
+## 📋 Changelog Recente
+
+### [v1.2.0] - Stable Release (2026-01-08)
+- **Fix Estabilidade**: Implementado sistema de limpeza de processos zumbis na porta 3001.
+- **Fix Data/Hora**: Parser de TXT refatorado para ignorar fusos horários e manter precisão local.
+- **Automação**: Geração imediata de jornadas após upload do arquivo.
+- **Infra**: Scripts de backup automático e restore 100% validados.
+- **Rede**: Configuração otimizada para acesso via IP público e DNS.
+
+### [0.1.0 a 1.1.4] - Betas e Hotfixes
+- Correção de permissões Prisma Shadow Database.
+- Implementação de deduplicação de batidas.
+- Ajuste de fuso horário no cabeçalho mensal.
+- Fix de conectividade CORS.
+
+---
+
+## 🚀 Como Começar (Instalação Rápida)
+
+Para instalar a versão estável no **Debian 12**, rode:
+
+```bash
+wget https://raw.githubusercontent.com/code-bynary/pontosweb/main/install-debian.sh
+chmod +x install-debian.sh
+./install-debian.sh
+```
+
+---
+
+## 🔧 Manutenção
+
+- **Atualizar**: `./update.sh` (faz backup automático antes de atualizar).
+- **Restaurar**: `./restore.sh` (menu interativo de backups).
+- **Logs**: `journalctl -u pontosweb-backend -f`.
+
+---
+
+© 2026 PontosWeb - Versão Estável 1.2.0
 
 ## 📋 Funcionalidades
 
