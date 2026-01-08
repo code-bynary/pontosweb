@@ -102,7 +102,10 @@ export default function TimecardPage() {
                                 ← Mês Anterior
                             </button>
                             <h2 className="text-2xl font-bold">
-                                {format(new Date(month + '-01'), 'MMMM yyyy')}
+                                {(() => {
+                                    const [y, m] = month.split('-').map(Number);
+                                    return format(new Date(y, m - 1, 1), 'MMMM yyyy');
+                                })()}
                             </h2>
                             <button
                                 onClick={handleNextMonth}
