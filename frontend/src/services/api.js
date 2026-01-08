@@ -50,6 +50,11 @@ export const updateWorkday = async (workdayId, updates) => {
     return response.data;
 };
 
+export const updateEmployeeSchedule = async (employeeId, schedule) => {
+    const response = await api.put(`/employees/${employeeId}/schedule`, schedule);
+    return response.data;
+};
+
 export const getWorkdayHistory = async (workdayId) => {
     const response = await api.get(`/workday/${workdayId}/history`);
     return response.data;
