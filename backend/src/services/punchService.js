@@ -161,11 +161,13 @@ async function createWorkdayFromPunches(employeeId, date, punches) {
     }
 
     // Create or update workday
+    const workdayDate = new Date(date + 'T00:00:00Z');
+
     const workday = await prisma.workday.upsert({
         where: {
             employeeId_date: {
                 employeeId,
-                date: new Date(new Date(date).getFullYear(), new Date(date).getMonth(), new Date(date).getDate())
+                date: workdayDate
             }
         },
         update: {
@@ -178,7 +180,7 @@ async function createWorkdayFromPunches(employeeId, date, punches) {
         },
         create: {
             employeeId,
-            date: new Date(new Date(date).getFullYear(), new Date(date).getMonth(), new Date(date).getDate()),
+            date: workdayDate,
             entrada1,
             saida1,
             entrada2,
