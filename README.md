@@ -1,11 +1,224 @@
-# PontosWeb
+# PontosWeb 🕐
 
-Sistema de tratamento de batidas de ponto eletrônico.
+Sistema completo de controle de ponto eletrônico com importação de arquivos TXT, processamento automático de batidas, geração de jornadas diárias e exportação de relatórios.
 
-## Descrição
+## 📋 Funcionalidades
 
-Sistema para importação e tratamento de arquivos TXT contendo registros de batidas de ponto eletrônico.
+### Backend (Node.js + Express + Prisma + MySQL)
+- ✅ Upload e parsing de arquivos TXT de relógios biométricos
+- ✅ Importação automática de batidas de ponto
+- ✅ Criação/atualização automática de funcionários
+- ✅ Geração de jornadas diárias a partir das batidas
+- ✅ Cálculo automático de horas trabalhadas
+- ✅ Edição manual de horários com histórico de ajustes
+- ✅ API REST completa
+- ✅ Exportação de cartão de ponto em PDF
+- ✅ Exportação de cartão de ponto em Excel
 
-## Status
+### Frontend (React + Vite + Tailwind CSS)
+- ✅ Interface moderna e responsiva
+- ✅ Upload de arquivos com drag & drop
+- ✅ Lista de funcionários com estatísticas
+- ✅ Cartão de ponto mensal editável
+- ✅ Navegação entre meses
+- ✅ Indicadores visuais de status (OK, Incompleto, Editado)
+- ✅ Totalizadores diários e mensais
+- ✅ Botões de exportação (PDF/Excel)
 
-🚧 Projeto em desenvolvimento inicial
+## 🛠️ Tecnologias
+
+### Backend
+- **Node.js** 18+
+- **Express** 4.x - Framework web
+- **Prisma** 5.x - ORM
+- **MySQL** 8.x - Banco de dados
+- **Multer** - Upload de arquivos
+- **PDFKit** - Geração de PDF
+- **ExcelJS** - Geração de Excel
+- **date-fns** - Manipulação de datas
+
+### Frontend
+- **React** 18+
+- **Vite** 5.x - Build tool
+- **Tailwind CSS** 3.x - Framework CSS
+- **React Router** 6.x - Roteamento
+- **Axios** - Cliente HTTP
+- **date-fns** - Manipulação de datas
+
+## 📁 Estrutura do Projeto
+
+```
+pontosweb/
+├── backend/
+│   ├── prisma/
+│   │   └── schema.prisma          # Schema do banco de dados
+│   ├── src/
+│   │   ├── controllers/           # Controladores da API
+│   │   ├── services/              # Lógica de negócio
+│   │   ├── routes/                # Rotas da API
+│   │   ├── utils/                 # Utilitários
+│   │   └── server.js              # Servidor Express
+│   ├── package.json
+│   └── .env.example
+├── frontend/
+│   ├── src/
+│   │   ├── components/            # Componentes React
+│   │   ├── pages/                 # Páginas
+│   │   ├── services/              # Serviços API
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── package.json
+│   └── vite.config.js
+└── README.md
+```
+
+## 🚀 Instalação e Configuração
+
+### Pré-requisitos
+- Node.js 18+ instalado
+- MySQL 8+ instalado e rodando
+- npm ou yarn
+
+### 1. Configurar Backend
+
+```bash
+cd backend
+
+# Instalar dependências
+npm install
+
+# Configurar variáveis de ambiente
+cp .env.example .env
+# Edite o arquivo .env com suas configurações de banco de dados
+
+# Gerar Prisma Client
+npm run prisma:generate
+
+# Executar migrations
+npm run prisma:migrate
+
+# Iniciar servidor de desenvolvimento
+npm run dev
+```
+
+O backend estará rodando em `http://localhost:3001`
+
+### 2. Configurar Frontend
+
+```bash
+cd frontend
+
+# Instalar dependências
+npm install
+
+# Iniciar servidor de desenvolvimento
+npm run dev
+```
+
+O frontend estará rodando em `http://localhost:5173`
+
+## 📝 Formato do Arquivo TXT
+
+O sistema espera arquivos TXT com o seguinte formato:
+
+```
+EnNo    Name            IOMd    DateTime
+001     João Silva      0       2026-01-08 08:00:00
+001     João Silva      1       2026-01-08 12:00:00
+001     João Silva      0       2026-01-08 13:00:00
+001     João Silva      1       2026-01-08 17:00:00
+002     Maria Santos    0       2026-01-08 08:15:00
+002     Maria Santos    1       2026-01-08 12:10:00
+```
+
+**Campos:**
+- `EnNo`: ID do funcionário no relógio de ponto
+- `Name`: Nome do funcionário
+- `IOMd`: Modo (0 = Entrada, 1 = Saída)
+- `DateTime`: Data e hora da batida
+
+## 🔌 API Endpoints
+
+### Upload
+```
+POST /api/upload
+Content-Type: multipart/form-data
+Body: { file: <arquivo.txt> }
+```
+
+### Funcionários
+```
+GET /api/employees              # Listar todos
+GET /api/employees/:id          # Obter um funcionário
+```
+
+### Jornadas
+```
+GET /api/workday/:employeeId/:month           # Cartão mensal (YYYY-MM)
+POST /api/workday/:employeeId/generate        # Gerar jornadas
+PUT /api/workday/:id                          # Editar jornada
+GET /api/workday/:id/history                  # Histórico de ajustes
+```
+
+### Exportação
+```
+GET /api/export/pdf/:employeeId/:month        # Download PDF
+GET /api/export/excel/:employeeId/:month      # Download Excel
+```
+
+## 💾 Modelo de Dados
+
+### Employee (Funcionário)
+- `id`, `enNo`, `name`, `createdAt`, `updatedAt`
+
+### Punch (Batida)
+- `id`, `employeeId`, `ioMode`, `dateTime`, `imported`, `createdAt`
+
+### Workday (Jornada Diária)
+- `id`, `employeeId`, `date`, `entrada1`, `saida1`, `entrada2`, `saida2`
+- `totalMinutes`, `status` (OK/INCOMPLETE/EDITED)
+
+### Adjustment (Ajuste/Histórico)
+- `id`, `workdayId`, `field`, `oldValue`, `newValue`, `reason`, `createdBy`
+
+## 🎯 Como Usar
+
+1. **Importar Arquivo**
+   - Acesse a página inicial
+   - Clique em "Selecionar arquivo" e escolha um arquivo .txt
+   - Clique em "Enviar Arquivo"
+   - O sistema processará as batidas e criará/atualizará funcionários
+
+2. **Visualizar Cartão de Ponto**
+   - Na lista de funcionários, clique em "Ver Cartão"
+   - Navegue entre meses usando os botões
+   - Visualize todas as jornadas do mês
+
+3. **Editar Horários**
+   - No cartão de ponto, clique em "Editar" na linha desejada
+   - Altere os horários conforme necessário
+   - Clique em "Salvar" para confirmar
+
+4. **Exportar Relatórios**
+   - No cartão de ponto, clique em "Exportar PDF" ou "Exportar Excel"
+   - O arquivo será baixado automaticamente
+
+## 🔮 Expansões Futuras
+
+- [ ] Banco de horas (saldo acumulado)
+- [ ] Configuração de tolerância de minutos
+- [ ] Gestão de escalas e turnos
+- [ ] Relatórios de horas extras
+- [ ] Dashboard com gráficos
+- [ ] Autenticação e autorização
+- [ ] Multi-empresa/departamento
+- [ ] Notificações de inconsistências
+- [ ] App mobile
+
+## 📄 Licença
+
+MIT
+
+## 👨‍💻 Desenvolvimento
+
+Desenvolvido com ❤️ usando Node.js, React e Tailwind CSS
