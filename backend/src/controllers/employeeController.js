@@ -28,7 +28,11 @@ export async function getAllEmployees(req, res) {
                     name: emp.name,
                     punchCount: emp._count.punches,
                     workdayCount: emp._count.workdays,
-                    lastPunch: lastPunch?.dateTime || null
+                    lastPunch: lastPunch?.dateTime || null,
+                    workStart1: emp.workStart1,
+                    workEnd1: emp.workEnd1,
+                    workStart2: emp.workStart2,
+                    workEnd2: emp.workEnd2
                 };
             })
         );
