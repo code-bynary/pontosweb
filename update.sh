@@ -125,9 +125,8 @@ if [[ $do_backup =~ ^[Yy]$ ]]; then
     
     # Limpar backups antigos (manter últimos 5)
     print_info "Limpando backups antigos (mantendo últimos 5)..."
-    cd "$BACKUP_SYS" && ls -t pontosweb_sys_*.tar.gz 2>/dev/null | tail -n +6 | xargs rm -f 2>/dev/null || true
-    cd "$BACKUP_DB" && ls -t pontosweb_db_*.sql.gz 2>/dev/null | tail -n +6 | xargs rm -f 2>/dev/null || true
-    cd - > /dev/null
+    (cd "$BACKUP_SYS" && ls -t pontosweb_sys_*.tar.gz 2>/dev/null | tail -n +6 | xargs rm -f 2>/dev/null || true)
+    (cd "$BACKUP_DB" && ls -t pontosweb_db_*.sql.gz 2>/dev/null | tail -n +6 | xargs rm -f 2>/dev/null || true)
     
     print_success "Backups concluídos!"
     echo ""
