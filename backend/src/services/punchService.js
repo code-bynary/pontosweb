@@ -9,6 +9,9 @@ export async function importPunchFile(fileContent) {
 
     let processedCount = 0;
     const importErrors = [...errors];
+    const affectedEmployees = new Set();
+    let minDate = null;
+    let maxDate = null;
 
     for (const record of records) {
         try {
@@ -33,6 +36,13 @@ export async function importPunchFile(fileContent) {
                 });
             }
 
+            // Track affected employee
+            affectedEmployees.add(employee.id);
+
+            // Track date range
+            if (!minDate || record.dateTime < minDate) minDate = record.dateTime;
+            if (!maxDate || record.dateTime > maxDate) maxDate = record.dateTime;
+
             // Create punch record
             await prisma.punch.create({
                 data: {
@@ -56,7 +66,12 @@ export async function importPunchFile(fileContent) {
         success: true,
         processed: processedCount,
         total: records.length,
-        errors: importErrors
+        errors: importErrors,
+        meta: {
+            affectedEmployees: Array.from(affectedEmployees),
+            minDate,
+            maxDate
+        }
     };
 }
 
