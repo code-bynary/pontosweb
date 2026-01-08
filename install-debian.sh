@@ -129,7 +129,8 @@ print_info "5/10 - Configurando banco de dados..."
 # Prepare SQL commands
 SQL_COMMANDS="CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';
-GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';
+# Conceder permissões globais para permitir criação do shadow database do Prisma
+GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'localhost';
 FLUSH PRIVILEGES;"
 
 # Try sudo mysql first (Debian default unix_socket)
