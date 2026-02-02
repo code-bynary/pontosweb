@@ -1,11 +1,11 @@
 # PontosWeb 🕒
 
-[![Versão](https://img.shields.io/badge/vers%C3%A3o-v1.8.0-blue?style=for-the-badge)
+[![Versão](https://img.shields.io/badge/vers%C3%A3o-v2.0.0-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/status-est%C3%A1vel-green?style=for-the-badge)
 ![Milestone](https://img.shields.io/badge/milestone-rh_master-gold?style=for-the-badge)
 
 > [!IMPORTANT]
-> **Versão v1.8.0 - Identidade Visual Unificada**: Padronização completa de cabeçalhos em todas as páginas. Design premium, navegação consistente e controle de versão centralizado.
+> **Versão v2.0.0 - Módulo de RH Profissional & Dashboard 📊💼**: Salto tecnológico com cadastro completo de colaboradores (CPF, Salaries, Cargos), Dashboard de KPIs em tempo real e interface de gestão de talentos.
 
 > [!IMPORTANT]
 > **Versão v1.6.0 - Checklist de RH**: Implementação do fluxo de conferência mensal. Marque funcionários como "Tratados" e gerencie o checklist global de fechamento.
@@ -348,6 +348,12 @@ Menu interativo permite restaurar:
 
 ### Changelog
 
+#### v2.0.0 (2026-02-02)
+- 🚀 **Dashboard Master**: Novo painel com KPI Cards (Presença, Horas Extras, Checklist).
+- 💼 **Módulo de RH Profissional**: Cadastro completo de colaboradores (CPF, PIS, Salário, Cargo).
+- 👤 **Perfis Individuais**: Página dedicada para gestão detalhada de cada colaborador.
+- 🏗️ **Database v2**: Expansão do schema Prisma para suportar gestão de talentos.
+
 #### v1.8.0 (2026-02-02)
 - ✅ Padronização do Header universal em todo o sistema.
 - ✅ Navegação consistente com botão "Voltar" inteligente.
@@ -382,9 +388,9 @@ Menu interativo permite restaurar:
 - ✅ Documentação completa
 
 ## 🛣️ Roadmap v2.0.0 (Próximos Passos)
-- [ ] **Módulo de RH Master**: Cadastro completo de funcionários (Salário, CPF, Documentos).
-- [ ] **Dashboard visual Premium**: KPI Cards com indicadores em tempo real.
-- [ ] **Cálculo de Proventos**: Horas Extras 60/100%, Faltas e DSR automático.
+- [x] **Módulo de RH Master**: Cadastro completo de funcionários (Salário, CPF, Documentos).
+- [x] **Dashboard visual Premium**: KPI Cards com indicadores em tempo real.
+- [ ] **Cálculo de Proventos Avançado**: Horas Extras 60/100%, Faltas e DSR automático.
 - [ ] **Tolerância Inteligente**: Filtro para batidas antecipadas acidentais.
 
 ## 📄 Licença

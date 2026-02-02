@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Header({ title, subtitle, onBack, actions }) {
     const navigate = useNavigate();
-    const APP_VERSION = "v1.8.0";
+    const APP_VERSION = "v2.0.0";
 
     return (
         <nav className="bg-white shadow-sm mb-8">

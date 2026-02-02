@@ -7,6 +7,7 @@ import exportRoutes from './routes/export.js';
 import holidayRoutes from './routes/holiday.js';
 import abonoRoutes from './routes/abono.js';
 import reportRoutes from './routes/report.js';
+import dashboardRoutes from './routes/dashboard.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -30,6 +31,7 @@ app.use('/api/export', exportRoutes);
 app.use('/api/holidays', holidayRoutes);
 app.use('/api/abonos', abonoRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

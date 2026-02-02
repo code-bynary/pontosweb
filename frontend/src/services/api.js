@@ -63,6 +63,11 @@ export const updateEmployeeSchedule = async (employeeId, schedule) => {
     return response.data;
 };
 
+export const updateEmployeeProfile = async (employeeId, data) => {
+    const response = await api.put(`/employees/${employeeId}/profile`, data);
+    return response.data;
+};
+
 export const toggleEmployeeTreatment = async (employeeId) => {
     const response = await api.patch(`/employees/${employeeId}/toggle-treatment`);
     return response.data;
@@ -143,6 +148,12 @@ export const getMonthlyCompanyReport = async (month) => {
 
 export const downloadCompanyReportExcel = (month) => {
     window.open(`${API_BASE_URL}/reports/export/excel/${month}`, '_blank');
+};
+
+// Dashboard API functions
+export const getDashboardStats = async () => {
+    const response = await api.get('/dashboard/stats');
+    return response.data;
 };
 
 export default api;

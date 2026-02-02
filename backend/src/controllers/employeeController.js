@@ -149,3 +149,78 @@ export async function resetAllTreatment(req, res) {
         res.status(500).json({ error: error.message });
     }
 }
+
+/**
+ * Create a new employee manually
+ */
+export async function createEmployee(req, res) {
+    try {
+        const { enNo, name, workStart1, workEnd1, workStart2, workEnd2 } = req.body;
+
+        if (!enNo || !name) {
+            return res.status(400).json({ error: 'Matrícula e Nome são obrigatórios.' });
+        }
+
+        // Check if enNo already exists
+        const existing = await prisma.employee.findUnique({
+            where: { enNo }
+        });
+
+        if (existing) {
+            return res.status(400).json({ error: 'Já existe um colaborador com esta matrícula.' });
+        }
+
+        const employee = await prisma.employee.create({
+            data: {
+                enNo,
+                name,
+                workStart1,
+                workEnd1,
+                workStart2,
+                workEnd2
+            }
+        });
+
+        res.status(201).json(employee);
+    } catch (error) {
+        console.error('Create employee error:', error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+/**
+ * Update full employee profile
+ */
+export async function updateEmployeeProfile(req, res) {
+    try {
+        const { id } = req.params;
+        const data = req.body;
+
+        // Flatten data if needed or validate
+        const updated = await prisma.employee.update({
+            where: { id: parseInt(id) },
+            data: {
+                name: data.name,
+                jobTitle: data.jobTitle,
+                salary: data.salary,
+                startDate: data.startDate ? new Date(data.startDate) : null,
+                regDate: data.regDate ? new Date(data.regDate) : null,
+                address: data.address,
+                phone: data.phone,
+                cpf: data.cpf,
+                rg: data.rg,
+                pis: data.pis,
+                reservista: data.reservista,
+                titulo: data.titulo,
+                fatherName: data.fatherName,
+                motherName: data.motherName,
+                childrenInfo: data.childrenInfo || []
+            }
+        });
+
+        res.json(updated);
+    } catch (error) {
+        console.error('Update profile error:', error);
+        res.status(500).json({ error: error.message });
+    }
+}

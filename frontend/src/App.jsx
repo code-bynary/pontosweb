@@ -3,6 +3,7 @@ import UploadPage from './pages/UploadPage';
 import TimecardPage from './pages/TimecardPage';
 import HolidaysPage from './pages/HolidaysPage';
 import ReportsPage from './pages/ReportsPage';
+import EmployeeProfilePage from './pages/EmployeeProfilePage';
 
 export default function App() {
     return (
@@ -12,6 +13,7 @@ export default function App() {
                 <Route path="/timecard/:employeeId/:month" element={<TimecardPage />} />
                 <Route path="/holidays" element={<HolidaysPage />} />
                 <Route path="/reports" element={<ReportsPage />} />
+                <Route path="/profile/:employeeId" element={<EmployeeProfilePage />} />
             </Routes>
         </BrowserRouter>
     );

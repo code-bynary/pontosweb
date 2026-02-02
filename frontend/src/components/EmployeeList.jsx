@@ -95,6 +95,13 @@ export default function EmployeeList({ employees, onUpdate }) {
                                     <td>
                                         <div className="flex gap-2">
                                             <button
+                                                onClick={() => navigate(`/profile/${employee.id}`)}
+                                                className="btn btn-secondary text-sm p-2"
+                                                title="Perfil do Colaborador"
+                                            >
+                                                👤
+                                            </button>
+                                            <button
                                                 onClick={() => handleViewTimecard(employee.id)}
                                                 className="btn btn-primary text-sm"
                                             >
