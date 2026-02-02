@@ -1,12 +1,12 @@
 # PontosWeb 🕒
 
-[![Version](https://img.shields.io/badge/version-1.3.3--stable-green.svg)](https://github.com/code-bynary/pontosweb/releases/latest)
+[![Version](https://img.shields.io/badge/version-1.3.4--stable-green.svg)](https://github.com/code-bynary/pontosweb/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Sistema moderno e eficiente para controle de ponto eletrônico, desenvolvido especificamente para processar arquivos de exportação de relógios biométricos.
 
 > [!IMPORTANT]
-> **Versão 1.3.3 (Stable)**: Hotfix crítico para tratamento de batidas noturnas e virada de fuso horário.
+> **Versão 1.3.4 (Stable)**: Refatoração completa do motor de cálculo, tratamento de batidas redundantes, finais de semana e funcionalidade de recálculo manual.
 
 ---
 
@@ -19,6 +19,14 @@ Sistema moderno e eficiente para controle de ponto eletrônico, desenvolvido esp
 ---
 
 ## 📋 Changelog Recente
+
+### [v1.3.4] - Stable Release (2026-02-02)
+- **Fix Cálculo de Horas**: Refatoração completa da lógica de pareamento (In/Out) para suportar turnos noturnos de forma robusta.
+- **Fix Redundância**: Sistema agora ignora automaticamente batidas duplicadas (intervalo < 5min).
+- **Fix Finais de Semana**: Carga horária esperada zerada automaticamente para sábados e domingos.
+- **Recálculo Manual**: Adicionado botão "Recalcular Mês" para processar batidas brutas com a nova lógica.
+- **UI**: Exibição visual da versão no cabeçalho do sistema.
+- **Bugfix**: Sincronização de totais no rodapé do cartão de ponto.
 
 ### [v1.3.3] - Hotfix (2026-01-08)
 - **Fix Timezone**: Corrigido agrupamento de batidas usando horário local (evita que batidas após as 21:00 pulem para o dia seguinte).
@@ -64,7 +72,7 @@ chmod +x install-debian.sh
 
 ---
 
-© 2026 PontosWeb - Versão Estável 1.3.3
+© 2026 PontosWeb - Versão Estável 1.3.4
 
 ## 📋 Funcionalidades
 
@@ -279,7 +287,7 @@ O projeto segue [Semantic Versioning](https://semver.org/):
 - **MINOR**: Novas funcionalidades (compatíveis)
 - **PATCH**: Correções de bugs
 
-**Versão Atual**: v1.3.3
+**Versão Atual**: v1.3.4
 
 Ver todas as versões: [Releases](https://github.com/code-bynary/pontosweb/releases)
 
