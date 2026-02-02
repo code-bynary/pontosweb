@@ -82,7 +82,7 @@ export default function TimecardPage() {
                         ← Voltar
                     </button>
                     <h1 className="text-3xl font-bold text-primary-600">
-                        Cartão de Ponto
+                        Cartão de Ponto <span className="text-sm font-normal text-gray-400 ml-2">v1.3.4</span>
                     </h1>
                     <p className="text-gray-600 mt-1">
                         {timecard.employee.name} ({timecard.employee.enNo})
@@ -182,15 +182,15 @@ export default function TimecardPage() {
                                 </p>
                             </div>
                             <div className={`p-4 rounded-lg ${(() => {
-                                    const total = timecard.workdays.reduce((acc, curr) => acc + curr.balanceMinutes, 0);
-                                    return total >= 0 ? 'bg-green-50' : 'bg-red-50';
-                                })()
+                                const total = timecard.workdays.reduce((acc, curr) => acc + curr.balanceMinutes, 0);
+                                return total >= 0 ? 'bg-green-50' : 'bg-red-50';
+                            })()
                                 }`}>
                                 <p className="text-gray-600 text-sm uppercase tracking-wider font-semibold">Saldo Final</p>
                                 <p className={`text-2xl font-bold ${(() => {
-                                        const total = timecard.workdays.reduce((acc, curr) => acc + curr.balanceMinutes, 0);
-                                        return total >= 0 ? 'text-green-600' : 'text-red-600';
-                                    })()
+                                    const total = timecard.workdays.reduce((acc, curr) => acc + curr.balanceMinutes, 0);
+                                    return total >= 0 ? 'text-green-600' : 'text-red-600';
+                                })()
                                     }`}>
                                     {(() => {
                                         const total = timecard.workdays.reduce((acc, curr) => acc + curr.balanceMinutes, 0);

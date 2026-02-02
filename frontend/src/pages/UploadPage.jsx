@@ -33,7 +33,7 @@ export default function UploadPage() {
             <nav className="bg-white shadow-sm mb-8">
                 <div className="max-w-7xl mx-auto px-4 py-4">
                     <h1 className="text-3xl font-bold text-primary-600">
-                        ⏰ PontosWeb
+                        ⏰ PontosWeb <span className="text-sm font-normal text-gray-400">v1.3.4</span>
                     </h1>
                     <p className="text-gray-600 mt-1">Sistema de Controle de Ponto Eletrônico</p>
                 </div>
