@@ -1,6 +1,6 @@
 import PDFDocument from 'pdfkit';
 import ExcelJS from 'exceljs';
-import { getMonthlyTimecard } from './workdayService.js';
+import { getMonthlyTimecard, getCompanyMonthlyReport } from './workdayService.js';
 
 /**
  * Generate PDF timecard
@@ -9,7 +9,7 @@ export async function generatePDFTimecard(employeeId, year, month) {
     const data = await getMonthlyTimecard(employeeId, year, month);
 
     return new Promise((resolve, reject) => {
-        const doc = new PDFDocument({ margin: 30 });
+        const doc = new PDFDocument({ size: 'A4', margin: 25 });
         const chunks = [];
 
         doc.on('data', chunk => chunks.push(chunk));
@@ -54,10 +54,10 @@ export async function generatePDFTimecard(employeeId, year, month) {
                 x += colWidths[i];
             });
 
-            y += 14;
+            y += 13.5;
 
-            // Page break only if truly necessary
-            if (y > 750) {
+            // Page break only if truly necessary (A4 has ~842 points)
+            if (y > 780) {
                 doc.addPage();
                 y = 30;
             }
@@ -94,7 +94,7 @@ export async function generatePDFTimecard(employeeId, year, month) {
         doc.fontSize(8).font('Helvetica-Bold').text('Assinatura do Colaborador', 40, signatureY + 5, { width: 180, align: 'center' });
         doc.text('Assinatura do Responsável', 350, signatureY + 5, { width: 180, align: 'center' });
 
-        doc.fontSize(7).font('Helvetica').text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')} | PontosWeb v1.3.8`, 40, doc.page.height - 30, { align: 'center' });
+        doc.fontSize(7).font('Helvetica').text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')} | PontosWeb v1.4.0`, 40, doc.page.height - 25, { align: 'center' });
 
         doc.end();
     });
@@ -163,6 +163,85 @@ export async function generateExcelTimecard(employeeId, year, month) {
         { width: 12 },
         { width: 12 }
     ];
+
+    return await workbook.xlsx.writeBuffer();
+}
+
+/**
+ * Generate Company-wide Monthly Report Excel
+ */
+export async function generateCompanyReportExcel(year, month) {
+    const reportData = await getCompanyMonthlyReport(year, month);
+    const monthStr = `${year}-${String(month).padStart(2, '0')}`;
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Relatório Gerencial');
+
+    // Header
+    worksheet.mergeCells('A1:H1');
+    worksheet.getCell('A1').value = `Relatório Gerencial Mensal - ${monthStr}`;
+    worksheet.getCell('A1').font = { size: 16, bold: true };
+    worksheet.getCell('A1').alignment = { horizontal: 'center' };
+
+    // Table headers
+    worksheet.getRow(3).values = [
+        'Matrícula',
+        'Nome',
+        'Esperado',
+        'Trabalhado',
+        'Abono',
+        'Extras',
+        'Atrasos/Faltas',
+        'Saldo Final'
+    ];
+    worksheet.getRow(3).font = { bold: true };
+    worksheet.getRow(3).fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FFE0E0E0' }
+    };
+
+    // Data rows
+    reportData.forEach((emp, index) => {
+        const row = worksheet.getRow(4 + index);
+        if (emp.error) {
+            row.values = [emp.enNo, emp.name, 'ERRO AO CALCULAR'];
+            return;
+        }
+
+        row.values = [
+            emp.enNo,
+            emp.name,
+            emp.expectedHours,
+            emp.workedHours,
+            emp.abonoHours,
+            emp.extraHours,
+            emp.delayHours,
+            emp.balanceHours
+        ];
+
+        // Color balance
+        const balanceCell = row.getCell(8);
+        balanceCell.font = {
+            bold: true,
+            color: { argb: emp.balanceMinutes >= 0 ? 'FF008000' : 'FFFF0000' }
+        };
+    });
+
+    // Column widths
+    worksheet.columns = [
+        { width: 12 },
+        { width: 30 },
+        { width: 12 },
+        { width: 12 },
+        { width: 12 },
+        { width: 12 },
+        { width: 15 },
+        { width: 12 }
+    ];
+
+    // Auto-filter
+    worksheet.autoFilter = `A3:H${3 + reportData.length}`;
 
     return await workbook.xlsx.writeBuffer();
 }

@@ -1,9 +1,11 @@
 # PontosWeb 🕒
 
-[![Version](https://img.shields.io/badge/version-1.3.8--stable-green.svg)](https://github.com/code-bynary/pontosweb/releases/latest)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Versão](https://img.shields.io/badge/vers%C3%A3o-v1.4.0-blue?style=for-the-badge)
+![Status](https://img.shields.io/badge/status-est%C3%A1vel-green?style=for-the-badge)
+![Milestone](https://img.shields.io/badge/milestone-relat%C3%B3rios-gold?style=for-the-badge)
 
-Sistema moderno e eficiente para controle de ponto eletrônico, desenvolvido especificamente para processar arquivos de exportação de relógios biométricos.
+> [!IMPORTANT]
+> **Versão v1.4.0 - Relatórios Gerenciais**: Implementação de relatórios consolidados da empresa, permitindo visão macro de extras, atrasos e saldos de todos os funcionários de uma só vez, além de otimização industrial do PDF A4.
 
 > [!IMPORTANT]
 > **Versão 1.3.8 (Milestone)**: O "Divisor de Águas" do projeto. Maturidade total com dashboard estatístico, gestão de abonos, relatórios com assinatura e precisão absoluta nos cálculos.

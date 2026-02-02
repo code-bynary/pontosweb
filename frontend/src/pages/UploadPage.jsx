@@ -34,16 +34,24 @@ export default function UploadPage() {
                 <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
                     <div>
                         <h1 className="text-3xl font-bold text-primary-600">
-                            ⏰ PontosWeb <span className="text-sm font-normal text-gray-400">v1.3.8</span>
+                            ⏰ PontosWeb <span className="text-sm font-normal text-gray-400">v1.4.0</span>
                         </h1>
                         <p className="text-gray-600 mt-1">Sistema de Controle de Ponto Eletrônico</p>
                     </div>
-                    <button
-                        onClick={() => navigate('/holidays')}
-                        className="btn btn-secondary flex items-center gap-2"
-                    >
-                        📅 Gerenciar Feriados
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => navigate('/holidays')}
+                            className="bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-xl border border-gray-200 font-bold transition-all flex items-center gap-2"
+                        >
+                            📅 Feriados
+                        </button>
+                        <button
+                            onClick={() => navigate('/reports')}
+                            className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-xl font-bold transition-all shadow-lg shadow-primary-100 flex items-center gap-2"
+                        >
+                            📊 Relatórios Gerenciais
+                        </button>
+                    </div>
                 </div>
             </nav>
 

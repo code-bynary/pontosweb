@@ -197,3 +197,44 @@ export async function getWorkdayHistory(workdayId) {
 
     return adjustments;
 }
+
+/**
+ * Get monthly report for all employees
+ */
+export async function getCompanyMonthlyReport(year, month) {
+    const employees = await prisma.employee.findMany({
+        orderBy: { name: 'asc' }
+    });
+
+    const reportData = [];
+
+    for (const employee of employees) {
+        try {
+            const timecard = await getMonthlyTimecard(employee.id, year, month);
+            reportData.push({
+                employeeId: employee.id,
+                name: employee.name,
+                enNo: employee.enNo,
+                expectedHours: timecard.totalExpectedHours,
+                workedHours: timecard.totalHours,
+                extraHours: timecard.stats.totalExtraHours,
+                delayHours: timecard.stats.totalDelayHours,
+                abonoHours: timecard.stats.totalAbonoHours,
+                balanceHours: timecard.totalBalanceHours,
+                balanceMinutes: timecard.totalBalanceMinutes,
+                abonoCount: timecard.stats.abonoByCategory.FULL_DAY + timecard.stats.abonoByCategory.PARTIAL
+            });
+        } catch (error) {
+            console.error(`Error calculating report for employee ${employee.id}:`, error);
+            // Push empty record if failed
+            reportData.push({
+                employeeId: employee.id,
+                name: employee.name,
+                enNo: employee.enNo,
+                error: true
+            });
+        }
+    }
+
+    return reportData;
+}

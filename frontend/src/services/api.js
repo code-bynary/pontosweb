@@ -125,4 +125,14 @@ export const deleteAbono = async (id) => {
     return response.data;
 };
 
+// Report API functions
+export const getMonthlyCompanyReport = async (month) => {
+    const response = await api.get(`/reports/monthly/${month}`);
+    return response.data;
+};
+
+export const downloadCompanyReportExcel = (month) => {
+    window.open(`${API_BASE_URL}/reports/export/excel/${month}`, '_blank');
+};
+
 export default api;
