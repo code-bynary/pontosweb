@@ -57,6 +57,9 @@ export async function getEmployee(req, res) {
             include: {
                 _count: {
                     select: { punches: true, workdays: true }
+                },
+                salaryHistory: {
+                    orderBy: { changeDate: 'desc' }
                 }
             }
         });
@@ -196,26 +199,58 @@ export async function updateEmployeeProfile(req, res) {
         const { id } = req.params;
         const data = req.body;
 
-        // Flatten data if needed or validate
-        const updated = await prisma.employee.update({
+        // Current employee to check salary change
+        const current = await prisma.employee.findUnique({
             where: { id: parseInt(id) },
-            data: {
-                name: data.name,
-                jobTitle: data.jobTitle,
-                salary: data.salary,
-                startDate: data.startDate ? new Date(data.startDate) : null,
-                regDate: data.regDate ? new Date(data.regDate) : null,
-                address: data.address,
-                phone: data.phone,
-                cpf: data.cpf,
-                rg: data.rg,
-                pis: data.pis,
-                reservista: data.reservista,
-                titulo: data.titulo,
-                fatherName: data.fatherName,
-                motherName: data.motherName,
-                childrenInfo: data.childrenInfo || []
+            select: { salary: true }
+        });
+
+        // 1. Prepare Update Data
+        const updateData = {
+            name: data.name,
+            jobTitle: data.jobTitle,
+            salary: data.salary ? parseFloat(data.salary) : null,
+            startDate: data.startDate ? new Date(data.startDate) : null,
+            regDate: data.regDate ? new Date(data.regDate) : null,
+            cep: data.cep,
+            address: data.address,
+            number: data.number,
+            neighborhood: data.neighborhood,
+            city: data.city,
+            state: data.state,
+            phone: data.phone,
+            cpf: data.cpf,
+            rg: data.rg,
+            pis: data.pis,
+            reservista: data.reservista,
+            titulo: data.titulo,
+            cnh: data.cnh,
+            education: data.education,
+            maritalStatus: data.maritalStatus,
+            fatherName: data.fatherName,
+            motherName: data.motherName,
+            childrenInfo: data.childrenInfo || []
+        };
+
+        // 2. Wrap in transaction to handle salary history
+        const updated = await prisma.$transaction(async (tx) => {
+            const emp = await tx.employee.update({
+                where: { id: parseInt(id) },
+                data: updateData
+            });
+
+            // If salary changed, record history
+            if (current && data.salary && parseFloat(current.salary) !== parseFloat(data.salary)) {
+                await tx.salaryHistory.create({
+                    data: {
+                        employeeId: emp.id,
+                        amount: parseFloat(data.salary),
+                        reason: data.salaryReason || 'Alteração cadastral'
+                    }
+                });
             }
+
+            return emp;
         });
 
         res.json(updated);

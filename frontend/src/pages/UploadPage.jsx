@@ -46,21 +46,21 @@ export default function UploadPage() {
                     <>
                         <button
                             onClick={() => setIsAddModalOpen(true)}
-                            className="bg-white hover:bg-gray-50 text-primary-600 px-4 py-2 rounded-xl border border-primary-200 font-bold transition-all flex items-center gap-2"
+                            className="bg-white hover:bg-gray-50 text-primary-600 px-4 py-2 rounded-xl border border-primary-200 font-bold transition-all flex items-center gap-2 shadow-sm"
                         >
                             👤 Novo Colaborador
                         </button>
                         <button
                             onClick={() => navigate('/holidays')}
-                            className="bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-xl border border-gray-200 font-bold transition-all flex items-center gap-2"
+                            className="bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-xl border border-gray-100 font-bold transition-all flex items-center gap-2 shadow-sm"
                         >
                             📅 Feriados
                         </button>
                         <button
                             onClick={() => navigate('/reports')}
-                            className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-xl font-bold transition-all shadow-lg shadow-primary-100 flex items-center gap-2"
+                            className="bg-primary-600 hover:bg-primary-700 text-white px-5 py-2 rounded-xl font-bold transition-all flex items-center gap-2 shadow-lg shadow-primary-200 hover:-translate-y-0.5"
                         >
-                            📊 Relatórios Gerenciais
+                            📊 Relatórios
                         </button>
                     </>
                 }

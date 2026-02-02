@@ -28,13 +28,25 @@ model Employee {
   regDate        DateTime?  @db.Date
   jobTitle       String?    @db.VarChar(100)
   salary         Decimal?   @db.Decimal(10, 2)
-  address        String?    @db.VarChar(255)
+  
+  // Detalhes de Endereço (v2.1)
+  cep            String?    @db.VarChar(10)
+  address        String?    @db.VarChar(255) // Logradouro
+  number         String?    @db.VarChar(20)
+  neighborhood   String?    @db.VarChar(100)
+  city           String?    @db.VarChar(100)
+  state          String?    @db.VarChar(2)
+
   phone          String?    @db.VarChar(20)
   cpf            String?    @unique @db.VarChar(14)
   rg             String?    @db.VarChar(20)
   pis            String?    @db.VarChar(20)
   reservista     String?    @db.VarChar(20)
   titulo         String?    @db.VarChar(20)
+  cnh            String?    @db.VarChar(20)
+  education      String?    @db.VarChar(100)
+  maritalStatus  String?    @db.VarChar(50)
+
   fatherName     String?    @db.VarChar(255)
   motherName     String?    @db.VarChar(255)
   childrenInfo   Json?      // Stores [{name: string, age: number}]
@@ -44,8 +56,21 @@ model Employee {
   
   punches        Punch[]
   workdays       Workday[]
+  salaryHistory  SalaryHistory[]
   
   @@map("employees")
+}
+
+model SalaryHistory {
+  id         Int      @id @default(autoincrement())
+  employeeId Int
+  amount     Decimal  @db.Decimal(10, 2)
+  reason     String?  @db.Text
+  changeDate DateTime @default(now())
+  
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  
+  @@map("salary_history")
 }
 
 model Punch {
