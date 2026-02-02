@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getHolidays, createHoliday, deleteHoliday } from '../services/api';
+import Header from '../components/Header';
 
 export default function HolidaysPage() {
+    const navigate = useNavigate();
     const [holidays, setHolidays] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
@@ -85,17 +88,11 @@ export default function HolidaysPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <nav className="bg-white shadow-sm mb-8">
-                <div className="max-w-7xl mx-auto px-4 py-4 flex items-center gap-4">
-                    <button
-                        onClick={() => window.history.back()}
-                        className="text-primary-600 hover:text-primary-800 font-medium"
-                    >
-                        ← Voltar
-                    </button>
-                    <h1 className="text-3xl font-bold text-primary-600">Gerenciar Feriados</h1>
-                </div>
-            </nav>
+            <Header
+                title="Gerenciar Feriados"
+                subtitle="Configure feriados nacionais, municipais e pontes"
+                onBack="/"
+            />
 
             <div className="max-w-7xl mx-auto px-4 pb-12">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

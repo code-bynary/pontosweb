@@ -1,11 +1,11 @@
 # PontosWeb 🕒
 
-[![Versão](https://img.shields.io/badge/vers%C3%A3o-v1.7.7-blue?style=for-the-badge)
+[![Versão](https://img.shields.io/badge/vers%C3%A3o-v1.8.0-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/status-est%C3%A1vel-green?style=for-the-badge)
 ![Milestone](https://img.shields.io/badge/milestone-rh_master-gold?style=for-the-badge)
 
 > [!IMPORTANT]
-> **Versão v1.7.6 - Abonos Inteligentes**: Nova interface visual com ícones (🏥 Saúde, 🏠 Folga, 📄 Doc), mapa de cores dinâmico e legenda informativa para total clareza na gestão de ausências.
+> **Versão v1.8.0 - Identidade Visual Unificada**: Padronização completa de cabeçalhos em todas as páginas. Design premium, navegação consistente e controle de versão centralizado.
 
 > [!IMPORTANT]
 > **Versão v1.6.0 - Checklist de RH**: Implementação do fluxo de conferência mensal. Marque funcionários como "Tratados" e gerencie o checklist global de fechamento.
@@ -17,7 +17,7 @@
 - **Backend**: Node.js (Express), Prisma ORM, MySQL/MariaDB.
 - **Frontend**: React (Vite), Tailwind CSS, Headless UI.
 - **Relatórios**: PDFKit e ExcelJS.
-- **Marco**: v1.7.6 - Gestão Visual de Abonos e Checklist de RH.
+- **Marco**: v1.8.0 - Unificação de Interface e Componentes.
 
 ---
 
@@ -286,7 +286,7 @@ O projeto segue [Semantic Versioning](https://semver.org/):
 - **MINOR**: Novas funcionalidades (compatíveis)
 - **PATCH**: Correções de bugs
 
-**Versão Atual**: v1.7.7
+**Versão Atual**: v1.8.0
 
 Ver todas as versões: [Releases](https://github.com/code-bynary/pontosweb/releases)
 
@@ -347,6 +347,11 @@ Menu interativo permite restaurar:
 - `hotfix/*` - Correções urgentes
 
 ### Changelog
+
+#### v1.8.0 (2026-02-02)
+- ✅ Padronização do Header universal em todo o sistema.
+- ✅ Navegação consistente com botão "Voltar" inteligente.
+- ✅ Identidade visual unificada com badges de versão automáticas.
 
 #### v1.7.7 (2026-02-02)
 - ✅ Correção Crítica de Layout: Reestruturação de containers flex para visualização mobile e desktop.

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { getMonthlyTimecard, downloadPDF, downloadExcel, recalculateWorkdays } from '../services/api';
 import WorkdayRow from '../components/WorkdayRow';
 import AbonoModal from '../components/AbonoModal';
+import Header from '../components/Header';
 import { format, addMonths, subMonths } from 'date-fns';
 
 export default function TimecardPage() {
@@ -96,22 +97,11 @@ export default function TimecardPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <nav className="bg-white shadow-sm mb-8">
-                <div className="max-w-7xl mx-auto px-4 py-4">
-                    <button
-                        onClick={() => navigate('/')}
-                        className="text-primary-600 hover:text-primary-700 mb-2"
-                    >
-                        ← Voltar
-                    </button>
-                    <h1 className="text-3xl font-bold text-primary-600">
-                        Cartão de Ponto <span className="text-sm font-normal text-gray-400 ml-2">v1.7.7</span>
-                    </h1>
-                    <p className="text-gray-600 mt-1">
-                        {timecard.employee.name} ({timecard.employee.enNo})
-                    </p>
-                </div>
-            </nav>
+            <Header
+                title="Cartão de Ponto"
+                subtitle={`${timecard.employee.name} (${timecard.employee.enNo})`}
+                onBack="/"
+            />
 
             <div className="max-w-7xl mx-auto px-4">
                 <div className="card">

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getMonthlyCompanyReport, downloadCompanyReportExcel } from '../services/api';
+import Header from '../components/Header';
 
 export default function ReportsPage() {
+    const navigate = useNavigate();
     const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
     const [report, setReport] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -53,18 +55,11 @@ export default function ReportsPage() {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <nav className="bg-white shadow-sm mb-8">
-                <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-                    <div className="flex items-center gap-4">
-                        <Link to="/" className="text-gray-500 hover:text-primary-600 transition-colors">
-                            ← Voltar
-                        </Link>
-                        <h1 className="text-3xl font-bold text-primary-600">
-                            Relatórios Gerenciais <span className="text-sm font-normal text-gray-400">v1.4.0</span>
-                        </h1>
-                    </div>
-                </div>
-            </nav>
+            <Header
+                title="Relatórios Gerenciais"
+                subtitle="Visão macro consolidada de toda a empresa"
+                onBack="/"
+            />
 
             <main className="max-w-7xl mx-auto px-4 pb-12">
                 {/* Filters & Actions */}
