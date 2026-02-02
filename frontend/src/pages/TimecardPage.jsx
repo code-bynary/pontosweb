@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getMonthlyTimecard, downloadPDF, downloadExcel } from '../services/api';
+import { getMonthlyTimecard, downloadPDF, downloadExcel, recalculateWorkdays } from '../services/api';
 import WorkdayRow from '../components/WorkdayRow';
 import { format, addMonths, subMonths } from 'date-fns';
 
@@ -48,6 +48,27 @@ export default function TimecardPage() {
 
     const handleDownloadExcel = () => {
         downloadExcel(employeeId, month);
+    };
+
+    const handleRecalculate = async () => {
+        if (!window.confirm('Deseja recalcular todas as batidas deste mês? Isso irá atualizar as horas baseando-se nas batidas originais.')) {
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const [year, monthNum] = month.split('-').map(Number);
+            const startDate = new Date(Date.UTC(year, monthNum - 1, 1)).toISOString();
+            const endDate = new Date(Date.UTC(year, monthNum, 0, 23, 59, 59)).toISOString();
+
+            await recalculateWorkdays(employeeId, startDate, endDate);
+            await loadTimecard();
+            alert('Recálculo concluído com sucesso!');
+        } catch (err) {
+            alert('Erro ao recalcular: ' + (err.response?.data?.error || err.message));
+        } finally {
+            setLoading(false);
+        }
     };
 
     if (loading) {
@@ -126,7 +147,14 @@ export default function TimecardPage() {
                                 onClick={handleDownloadExcel}
                                 className="btn btn-primary"
                             >
-                                📊 Exportar Excel
+                                📊 Excel
+                            </button>
+                            <button
+                                onClick={handleRecalculate}
+                                className="btn btn-secondary"
+                                title="Recalcular todas as batidas deste mês"
+                            >
+                                🔄 Recalcular Mês
                             </button>
                         </div>
                     </div>

@@ -45,6 +45,14 @@ export const generateWorkdays = async (employeeId, startDate, endDate) => {
     return response.data;
 };
 
+export const recalculateWorkdays = async (employeeId, startDate, endDate) => {
+    const response = await api.post(`/workday/${employeeId}/recalculate`, {
+        startDate,
+        endDate
+    });
+    return response.data;
+};
+
 export const updateWorkday = async (workdayId, updates) => {
     const response = await api.put(`/workday/${workdayId}`, updates);
     return response.data;
