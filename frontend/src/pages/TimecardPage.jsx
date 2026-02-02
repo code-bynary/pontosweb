@@ -195,12 +195,7 @@ export default function TimecardPage() {
                             <div className="bg-gray-50 p-4 rounded-lg">
                                 <p className="text-gray-600 text-sm uppercase tracking-wider font-semibold">Total Previsto</p>
                                 <p className="text-2xl font-bold text-gray-800">
-                                    {(() => {
-                                        const total = timecard.workdays.reduce((acc, curr) => acc + curr.expectedMinutes, 0);
-                                        const h = Math.floor(total / 60);
-                                        const m = total % 60;
-                                        return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-                                    })()}h
+                                    {timecard.totalExpectedHours}h
                                 </p>
                             </div>
                             <div className="bg-gray-50 p-4 rounded-lg">
@@ -209,25 +204,10 @@ export default function TimecardPage() {
                                     {timecard.totalHours}h
                                 </p>
                             </div>
-                            <div className={`p-4 rounded-lg ${(() => {
-                                const total = timecard.workdays.reduce((acc, curr) => acc + curr.balanceMinutes, 0);
-                                return total >= 0 ? 'bg-green-50' : 'bg-red-50';
-                            })()
-                                }`}>
+                            <div className={`p-4 rounded-lg ${timecard.totalBalanceMinutes >= 0 ? 'bg-green-50' : 'bg-red-50'}`}>
                                 <p className="text-gray-600 text-sm uppercase tracking-wider font-semibold">Saldo Final</p>
-                                <p className={`text-2xl font-bold ${(() => {
-                                    const total = timecard.workdays.reduce((acc, curr) => acc + curr.balanceMinutes, 0);
-                                    return total >= 0 ? 'text-green-600' : 'text-red-600';
-                                })()
-                                    }`}>
-                                    {(() => {
-                                        const total = timecard.workdays.reduce((acc, curr) => acc + curr.balanceMinutes, 0);
-                                        const absolute = Math.abs(total);
-                                        const h = Math.floor(absolute / 60);
-                                        const m = absolute % 60;
-                                        const sign = total < 0 ? '-' : '+';
-                                        return `${sign}${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-                                    })()}h
+                                <p className={`text-2xl font-bold ${timecard.totalBalanceMinutes >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                    {timecard.totalBalanceHours}h
                                 </p>
                             </div>
                         </div>

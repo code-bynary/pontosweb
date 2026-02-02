@@ -187,48 +187,32 @@ async function updateWorkdayFromPairs(employeeId, date, pairs) {
         }
     });
 
+    const workdayDate = new Date(date + 'T00:00:00Z');
+
     // Get employee schedule for calculations
     const employee = await prisma.employee.findUnique({
         where: { id: employeeId },
         select: { workStart1: true, workEnd1: true, workStart2: true, workEnd2: true }
     });
 
-    // Calculate expected minutes from schedule
-    let expectedMinutes = 0;
-    const parseTimeToMinutes = (timeStr) => {
-        if (!timeStr) return 0;
-        const [h, m] = timeStr.split(':').map(Number);
-        return h * 60 + m;
-    };
-
-    if (employee) {
-        const s1 = parseTimeToMinutes(employee.workStart1);
-        const e1 = parseTimeToMinutes(employee.workEnd1);
-        const s2 = parseTimeToMinutes(employee.workStart2);
-        const e2 = parseTimeToMinutes(employee.workEnd2);
-
-        if (e1 > s1) expectedMinutes += (e1 - s1);
-        if (e2 > s2) expectedMinutes += (e2 - s2);
-    }
+    // Calculate expected minutes
+    const expectedMinutes = calculateDailyExpectedMinutes(employee, workdayDate);
 
     // Calculate balance and extra
-    // Simple logic: if worked > expected, the difference is extra. 
-    // Balance is always worked - expected.
     const balanceMinutes = workedMinutes - expectedMinutes;
     const extraMinutes = balanceMinutes > 0 ? balanceMinutes : 0;
 
     // Determine status
     let status = 'INCOMPLETE';
-    if (pairs.length >= 2 && entrada1 && saida1 && entrada2 && saida2) {
+    if (expectedMinutes === 0) {
+        status = workedMinutes > 0 ? 'OK' : 'OK'; // Holidays/Weekends are OK even with 0 hours
+    } else if (pairs.length >= 2 && entrada1 && saida1 && entrada2 && saida2) {
         status = 'OK';
     } else if (pairs.length === 1 && entrada1 && saida1) {
-        // Could be OK if player only has one shift (e.g. half day)
-        // But system default seems to expect 4 punches for OK
-        status = 'INCOMPLETE';
+        // If there's only one shift expected, it could be OK, but we stick to the check.
+        // For now, if worked >= expected, we could mark as OK too.
+        if (workedMinutes >= expectedMinutes) status = 'OK';
     }
-
-    // Create or update workday
-    const workdayDate = new Date(date + 'T00:00:00Z');
 
     // Check if workday exists and is manually edited
     const existingWorkday = await prisma.workday.findUnique({
@@ -279,6 +263,38 @@ async function updateWorkdayFromPairs(employeeId, date, pairs) {
     });
 
     return workday;
+}
+
+/**
+ * Calculates the expected work minutes for a given day and employee.
+ * Accounts for weekends (Saturday/Sunday = 0 minutes).
+ */
+function calculateDailyExpectedMinutes(employee, date) {
+    if (!employee) return 0;
+
+    // Check if it's weekend (0 = Sunday, 6 = Saturday)
+    // IMPORTANT: use getUTCDay since our dates are UTC
+    const dayOfWeek = date.getUTCDay();
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+        return 0;
+    }
+
+    const parseTimeToMinutes = (timeStr) => {
+        if (!timeStr) return 0;
+        const [h, m] = timeStr.split(':').map(Number);
+        return h * 60 + m;
+    };
+
+    let expected = 0;
+    const s1 = parseTimeToMinutes(employee.workStart1);
+    const e1 = parseTimeToMinutes(employee.workEnd1);
+    const s2 = parseTimeToMinutes(employee.workStart2);
+    const e2 = parseTimeToMinutes(employee.workEnd2);
+
+    if (e1 > s1) expected += (e1 - s1);
+    if (e2 > s2) expected += (e2 - s2);
+
+    return expected;
 }
 
 /**

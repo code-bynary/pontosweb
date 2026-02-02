@@ -32,8 +32,16 @@ export async function getMonthlyTimecard(employeeId, year, month) {
 
     // Calculate total hours
     const workedMinutes = workdays.reduce((sum, wd) => sum + wd.workedMinutes, 0);
-    const totalHours = Math.floor(workedMinutes / 60);
-    const totalMins = workedMinutes % 60;
+    const expectedMinutes = workdays.reduce((sum, wd) => sum + wd.expectedMinutes, 0);
+    const balanceMinutes = workdays.reduce((sum, wd) => sum + wd.balanceMinutes, 0);
+
+    const formatMins = (mins) => {
+        const abs = Math.abs(mins);
+        const h = Math.floor(abs / 60);
+        const m = abs % 60;
+        const sign = mins < 0 ? '-' : '';
+        return `${sign}${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    };
 
     return {
         employee: {
@@ -53,11 +61,15 @@ export async function getMonthlyTimecard(employeeId, year, month) {
             expectedMinutes: wd.expectedMinutes,
             extraMinutes: wd.extraMinutes,
             balanceMinutes: wd.balanceMinutes,
-            totalHours: `${Math.floor(wd.workedMinutes / 60)}:${String(wd.workedMinutes % 60).padStart(2, '0')}`,
+            totalHours: formatMins(wd.workedMinutes),
             status: wd.status
         })),
         totalMinutes: workedMinutes,
-        totalHours: `${totalHours}:${String(totalMins).padStart(2, '0')}`
+        totalExpectedMinutes: expectedMinutes,
+        totalBalanceMinutes: balanceMinutes,
+        totalHours: formatMins(workedMinutes),
+        totalExpectedHours: formatMins(expectedMinutes),
+        totalBalanceHours: formatMins(balanceMinutes)
     };
 }
 
@@ -103,6 +115,17 @@ export async function updateWorkday(workdayId, updates, reason = null, createdBy
     const saida2 = updateData.saida2 !== undefined ? formatTime(updateData.saida2) : formatTime(workday.saida2);
 
     updateData.workedMinutes = calculateTotalMinutes(entrada1, saida1, entrada2, saida2);
+
+    // Recalculate balance for edited day
+    const employee = await prisma.employee.findUnique({
+        where: { id: workday.employeeId }
+    });
+
+    // We can't easily use calculateDailyExpectedMinutes here without importing it
+    // since it's in punchService. Let's keep it simple for now or fetch it from old record
+    // if the schedule didn't change.
+    updateData.balanceMinutes = updateData.workedMinutes - workday.expectedMinutes;
+    updateData.extraMinutes = updateData.balanceMinutes > 0 ? updateData.balanceMinutes : 0;
     updateData.status = 'EDITED';
 
     // Update workday and create adjustments in transaction
