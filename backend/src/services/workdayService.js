@@ -34,11 +34,21 @@ export async function getMonthlyTimecard(employeeId, year, month) {
         }
     });
 
-    // Calculate total hours
+    // Calculate total hours and granular stats
     const workedMinutes = workdays.reduce((sum, wd) => sum + wd.workedMinutes, 0);
     const expectedMinutes = workdays.reduce((sum, wd) => sum + wd.expectedMinutes, 0);
     const totalAbonoMinutes = workdays.reduce((sum, wd) => sum + (wd.abono?.minutes || 0), 0);
     const balanceMinutes = (workedMinutes + totalAbonoMinutes) - expectedMinutes;
+
+    const stats = {
+        totalExtraMinutes: workdays.reduce((sum, wd) => sum + Math.max(0, wd.workedMinutes - wd.expectedMinutes), 0),
+        totalDelayMinutes: workdays.reduce((sum, wd) => sum + Math.max(0, wd.expectedMinutes - (wd.workedMinutes + (wd.abono?.minutes || 0))), 0),
+        totalAbonoMinutes: totalAbonoMinutes,
+        abonoByCategory: {
+            FULL_DAY: workdays.filter(wd => wd.abono?.type === 'FULL_DAY').length,
+            PARTIAL: workdays.filter(wd => wd.abono?.type === 'PARTIAL').length
+        }
+    };
 
     const formatMins = (mins) => {
         const abs = Math.abs(mins);
@@ -89,7 +99,13 @@ export async function getMonthlyTimecard(employeeId, year, month) {
         totalBalanceMinutes: balanceMinutes,
         totalHours: formatMins(workedMinutes),
         totalExpectedHours: formatMins(expectedMinutes),
-        totalBalanceHours: formatMins(balanceMinutes)
+        totalBalanceHours: formatMins(balanceMinutes),
+        stats: {
+            ...stats,
+            totalExtraHours: formatMins(stats.totalExtraMinutes),
+            totalDelayHours: formatMins(stats.totalDelayMinutes),
+            totalAbonoHours: formatMins(stats.totalAbonoMinutes)
+        }
     };
 }
 

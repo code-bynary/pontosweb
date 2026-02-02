@@ -105,7 +105,7 @@ export default function TimecardPage() {
                         ← Voltar
                     </button>
                     <h1 className="text-3xl font-bold text-primary-600">
-                        Cartão de Ponto <span className="text-sm font-normal text-gray-400 ml-2">v1.3.4</span>
+                        Cartão de Ponto <span className="text-sm font-normal text-gray-400 ml-2">v1.3.6</span>
                     </h1>
                     <p className="text-gray-600 mt-1">
                         {timecard.employee.name} ({timecard.employee.enNo})
@@ -192,26 +192,49 @@ export default function TimecardPage() {
                         </table>
                     </div>
 
-                    {/* Total hours and Balance Summary */}
-                    <div className="mt-8 pt-6 border-t border-gray-200">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                                <p className="text-gray-600 text-sm uppercase tracking-wider font-semibold">Total Previsto</p>
-                                <p className="text-2xl font-bold text-gray-800">
-                                    {timecard.totalExpectedHours}h
-                                </p>
+                    {/* Detailed Statistics Summary */}
+                    <div className="mt-8 pt-8 border-t border-gray-200">
+                        <h2 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+                            📊 Resumo Mensal Detalhado
+                        </h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                            <div className="bg-white border border-gray-100 shadow-sm p-4 rounded-xl">
+                                <p className="text-gray-500 text-xs uppercase font-bold mb-1">Total Previsto</p>
+                                <p className="text-2xl font-bold text-gray-800">{timecard.totalExpectedHours}h</p>
                             </div>
-                            <div className="bg-gray-50 p-4 rounded-lg">
-                                <p className="text-gray-600 text-sm uppercase tracking-wider font-semibold">Total Trabalhado</p>
-                                <p className="text-2xl font-bold text-primary-600">
-                                    {timecard.totalHours}h
-                                </p>
+
+                            <div className="bg-white border border-gray-100 shadow-sm p-4 rounded-xl">
+                                <p className="text-gray-500 text-xs uppercase font-bold mb-1">Trabalhado</p>
+                                <p className="text-2xl font-bold text-primary-600">{timecard.totalHours}h</p>
                             </div>
-                            <div className={`p-4 rounded-lg ${timecard.totalBalanceMinutes >= 0 ? 'bg-green-50' : 'bg-red-50'}`}>
-                                <p className="text-gray-600 text-sm uppercase tracking-wider font-semibold">Saldo Final</p>
-                                <p className={`text-2xl font-bold ${timecard.totalBalanceMinutes >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                    {timecard.totalBalanceHours}h
-                                </p>
+
+                            <div className="bg-white border border-gray-100 shadow-sm p-4 rounded-xl">
+                                <p className="text-gray-500 text-xs uppercase font-bold mb-1">Abonado</p>
+                                <p className="text-2xl font-bold text-blue-600">{timecard.stats.totalAbonoHours}h</p>
+                                <div className="mt-1 flex gap-2">
+                                    <span className="text-[10px] text-gray-400">Total: {timecard.stats.abonoByCategory.FULL_DAY + timecard.stats.abonoByCategory.PARTIAL}</span>
+                                </div>
+                            </div>
+
+                            <div className="bg-white border border-gray-100 shadow-sm p-4 rounded-xl">
+                                <p className="text-gray-500 text-xs uppercase font-bold mb-1">Horas Extras</p>
+                                <p className="text-2xl font-bold text-green-600">+{timecard.stats.totalExtraHours}h</p>
+                            </div>
+
+                            <div className="bg-white border border-gray-100 shadow-sm p-4 rounded-xl">
+                                <p className="text-gray-500 text-xs uppercase font-bold mb-1">Atrasos/Faltas</p>
+                                <p className="text-2xl font-bold text-red-600">-{timecard.stats.totalDelayHours}h</p>
+                            </div>
+                        </div>
+
+                        {/* Final Balance Highlight */}
+                        <div className={`mt-6 p-6 rounded-xl flex items-center justify-between ${timecard.totalBalanceMinutes >= 0 ? 'bg-green-600 text-white' : 'bg-red-600 text-white shadow-lg'}`}>
+                            <div>
+                                <h3 className="text-lg font-medium opacity-90">Saldo Final do Mês</h3>
+                                <p className="text-sm opacity-75">Considerando (Trabalhado + Abonado) - Previsto</p>
+                            </div>
+                            <div className="text-4xl font-black">
+                                {timecard.totalBalanceMinutes > 0 ? '+' : ''}{timecard.totalBalanceHours}h
                             </div>
                         </div>
                     </div>
