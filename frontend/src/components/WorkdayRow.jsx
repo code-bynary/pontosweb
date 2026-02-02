@@ -11,6 +11,20 @@ const formatMinutes = (total) => {
     return `${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 };
 
+const getAbonoStyle = (reason) => {
+    const r = reason.toLowerCase();
+    if (r.includes('atestado') || r.includes('médico') || r.includes('odontológico') || r.includes('psicológico')) {
+        return 'bg-red-100 text-red-800 border-red-200';
+    }
+    if (r.includes('folga')) {
+        return 'bg-green-100 text-green-800 border-green-200';
+    }
+    if (r.includes('declaração') || r.includes('comparecimento')) {
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+    }
+    return 'bg-gray-100 text-gray-800 border-gray-200';
+};
+
 export default function WorkdayRow({ workday, onUpdate, onAbono }) {
     const [editing, setEditing] = useState(false);
     const [values, setValues] = useState({
@@ -112,9 +126,9 @@ export default function WorkdayRow({ workday, onUpdate, onAbono }) {
             <td className={workday.abonoMinutes > 0 ? 'text-blue-600 font-medium' : 'text-gray-400'}>
                 {workday.abonoMinutes > 0 ? formatMinutes(workday.abonoMinutes) : '-'}
                 {workday.abono && (
-                    <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                        ABONADO
-                    </span>
+                    <div className={`mt-1 text-[10px] font-bold px-2 py-0.5 rounded border uppercase inline-block ${getAbonoStyle(workday.abono.reason)}`}>
+                        {workday.abono.reason}
+                    </div>
                 )}
             </td>
             <td className="text-gray-600 text-sm">
