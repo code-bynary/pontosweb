@@ -31,11 +31,19 @@ export default function UploadPage() {
     return (
         <div className="min-h-screen bg-gray-50">
             <nav className="bg-white shadow-sm mb-8">
-                <div className="max-w-7xl mx-auto px-4 py-4">
-                    <h1 className="text-3xl font-bold text-primary-600">
-                        ⏰ PontosWeb <span className="text-sm font-normal text-gray-400">v1.3.4</span>
-                    </h1>
-                    <p className="text-gray-600 mt-1">Sistema de Controle de Ponto Eletrônico</p>
+                <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+                    <div>
+                        <h1 className="text-3xl font-bold text-primary-600">
+                            ⏰ PontosWeb <span className="text-sm font-normal text-gray-400">v1.3.6</span>
+                        </h1>
+                        <p className="text-gray-600 mt-1">Sistema de Controle de Ponto Eletrônico</p>
+                    </div>
+                    <button
+                        onClick={() => navigate('/holidays')}
+                        className="btn btn-secondary flex items-center gap-2"
+                    >
+                        📅 Gerenciar Feriados
+                    </button>
                 </div>
             </nav>
 
