@@ -1,5 +1,5 @@
 import { getMonthlyTimecard, updateWorkday, getWorkdayHistory } from '../services/workdayService.js';
-import { generateWorkdays } from '../services/punchService.js';
+import { generateWorkdays, recalculateEmployeeWorkdays } from '../services/punchService.js';
 
 /**
  * Get monthly timecard for employee
@@ -80,6 +80,31 @@ export async function getWorkdayHistoryController(req, res) {
         res.json(history);
     } catch (error) {
         console.error('Get history error:', error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+/**
+ * Recalculate workdays for employee
+ */
+export async function recalculateWorkdaysController(req, res) {
+    try {
+        const { employeeId } = req.params;
+        const { startDate, endDate } = req.body;
+
+        if (!startDate || !endDate) {
+            return res.status(400).json({ error: 'startDate and endDate are required' });
+        }
+
+        const workdays = await recalculateEmployeeWorkdays(
+            parseInt(employeeId),
+            startDate,
+            endDate
+        );
+
+        res.json({ success: true, workdays });
+    } catch (error) {
+        console.error('Recalculate workdays error:', error);
         res.status(500).json({ error: error.message });
     }
 }

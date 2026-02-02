@@ -13,9 +13,9 @@ export async function getMonthlyTimecard(employeeId, year, month) {
         throw new Error('Employee not found');
     }
 
-    // Get all workdays for the month
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0, 23, 59, 59);
+    // Get all workdays for the month (robust range)
+    const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
+    const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59));
 
     const workdays = await prisma.workday.findMany({
         where: {
