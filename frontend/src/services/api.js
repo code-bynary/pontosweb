@@ -76,4 +76,21 @@ export const downloadExcel = (employeeId, month) => {
     window.open(`${API_BASE_URL}/export/excel/${employeeId}/${month}`, '_blank');
 };
 
+// Holiday API functions
+export const getHolidays = async (year = null) => {
+    const params = year ? { year } : {};
+    const response = await api.get('/holidays', { params });
+    return response.data;
+};
+
+export const createHoliday = async (holidayData) => {
+    const response = await api.post('/holidays', holidayData);
+    return response.data;
+};
+
+export const deleteHoliday = async (id) => {
+    const response = await api.delete(`/holidays/${id}`);
+    return response.data;
+};
+
 export default api;
