@@ -1,5 +1,5 @@
 import prisma from '../utils/prisma.js';
-import { calculateTotalMinutes, timeStringToDate, formatTime } from '../utils/helpers.js';
+import { calculateTotalMinutes, timeStringToDate, formatTime, calculateDailyExpectedMinutes } from '../utils/helpers.js';
 
 /**
  * Get monthly timecard for an employee
@@ -121,10 +121,11 @@ export async function updateWorkday(workdayId, updates, reason = null, createdBy
         where: { id: workday.employeeId }
     });
 
-    // We can't easily use calculateDailyExpectedMinutes here without importing it
-    // since it's in punchService. Let's keep it simple for now or fetch it from old record
-    // if the schedule didn't change.
-    updateData.balanceMinutes = updateData.workedMinutes - workday.expectedMinutes;
+    // Get actual expected minutes for this day (handles weekends correctly)
+    const expectedMinutes = calculateDailyExpectedMinutes(employee, workday.date);
+
+    updateData.expectedMinutes = expectedMinutes;
+    updateData.balanceMinutes = updateData.workedMinutes - expectedMinutes;
     updateData.extraMinutes = updateData.balanceMinutes > 0 ? updateData.balanceMinutes : 0;
     updateData.status = 'EDITED';
 

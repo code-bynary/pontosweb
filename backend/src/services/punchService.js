@@ -1,5 +1,5 @@
 import prisma from '../utils/prisma.js';
-import { parsePunchFile } from '../utils/helpers.js';
+import { parsePunchFile, calculateDailyExpectedMinutes } from '../utils/helpers.js';
 
 // Antigravity: Início da refatoração do cálculo de horas (fix/calculation-and-recalc-logic)
 
@@ -225,8 +225,20 @@ async function updateWorkdayFromPairs(employeeId, date, pairs) {
     });
 
     if (existingWorkday && existingWorkday.status === 'EDITED') {
-        // Skip updating times for manually edited records to preserve user changes
-        return existingWorkday;
+        // Antigravity: Even for EDITED days, we want to ensure expectedMinutes and balanceMinutes 
+        // are consistent with current schedule and logic.
+        const updatedBalance = existingWorkday.workedMinutes - expectedMinutes;
+        const updatedExtra = updatedBalance > 0 ? updatedBalance : 0;
+
+        return await prisma.workday.update({
+            where: { id: existingWorkday.id },
+            data: {
+                expectedMinutes,
+                balanceMinutes: updatedBalance,
+                extraMinutes: updatedExtra
+                // We DON'T update entrada/saida/workedMinutes/status because it's EDITED
+            }
+        });
     }
 
     const workday = await prisma.workday.upsert({
@@ -263,38 +275,6 @@ async function updateWorkdayFromPairs(employeeId, date, pairs) {
     });
 
     return workday;
-}
-
-/**
- * Calculates the expected work minutes for a given day and employee.
- * Accounts for weekends (Saturday/Sunday = 0 minutes).
- */
-function calculateDailyExpectedMinutes(employee, date) {
-    if (!employee) return 0;
-
-    // Check if it's weekend (0 = Sunday, 6 = Saturday)
-    // IMPORTANT: use getUTCDay since our dates are UTC
-    const dayOfWeek = date.getUTCDay();
-    if (dayOfWeek === 0 || dayOfWeek === 6) {
-        return 0;
-    }
-
-    const parseTimeToMinutes = (timeStr) => {
-        if (!timeStr) return 0;
-        const [h, m] = timeStr.split(':').map(Number);
-        return h * 60 + m;
-    };
-
-    let expected = 0;
-    const s1 = parseTimeToMinutes(employee.workStart1);
-    const e1 = parseTimeToMinutes(employee.workEnd1);
-    const s2 = parseTimeToMinutes(employee.workStart2);
-    const e2 = parseTimeToMinutes(employee.workEnd2);
-
-    if (e1 > s1) expected += (e1 - s1);
-    if (e2 > s2) expected += (e2 - s2);
-
-    return expected;
 }
 
 /**

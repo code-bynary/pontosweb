@@ -132,3 +132,38 @@ export function timeStringToDate(timeStr) {
     date.setHours(hours, minutes, 0, 0);
     return date;
 }
+
+/**
+ * Calculates the expected work minutes for a given day and employee.
+ * Accounts for weekends (Saturday/Sunday = 0 minutes).
+ */
+export function calculateDailyExpectedMinutes(employee, date) {
+    if (!employee) return 0;
+
+    // date can be a string or Date object
+    const d = new Date(date);
+
+    // Check if it's weekend (0 = Sunday, 6 = Saturday)
+    // IMPORTANT: use getUTCDay since our dates are UTC at the database level
+    const dayOfWeek = d.getUTCDay();
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+        return 0;
+    }
+
+    const parseTimeToMinutes = (timeStr) => {
+        if (!timeStr) return 0;
+        const [h, m] = timeStr.split(':').map(Number);
+        return h * 60 + m;
+    };
+
+    let expected = 0;
+    const s1 = parseTimeToMinutes(employee.workStart1);
+    const e1 = parseTimeToMinutes(employee.workEnd1);
+    const s2 = parseTimeToMinutes(employee.workStart2);
+    const e2 = parseTimeToMinutes(employee.workEnd2);
+
+    if (e1 > s1) expected += (e1 - s1);
+    if (e2 > s2) expected += (e2 - s2);
+
+    return expected;
+}
