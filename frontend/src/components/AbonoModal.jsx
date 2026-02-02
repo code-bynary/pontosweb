@@ -7,7 +7,8 @@ export default function AbonoModal({ workday, onClose, onSuccess }) {
         reason: 'Atestado Médico',
         startTime: '',
         endTime: '',
-        minutes: workday.expectedMinutes
+        minutes: workday.expectedMinutes,
+        customReason: ''
     });
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -29,7 +30,7 @@ export default function AbonoModal({ workday, onClose, onSuccess }) {
             const abono = await createAbono({
                 workdayId: workday.id,
                 type: formData.type,
-                reason: formData.reason,
+                reason: formData.reason === 'Outro' ? formData.customReason : formData.reason,
                 startTime: formData.startTime || null,
                 endTime: formData.endTime || null,
                 minutes: parseInt(formData.minutes)
@@ -161,9 +162,27 @@ export default function AbonoModal({ workday, onClose, onSuccess }) {
                                 <option value="Atestado Médico">Atestado Médico</option>
                                 <option value="Atestado Odontológico">Atestado Odontológico</option>
                                 <option value="Atestado Psicológico">Atestado Psicológico</option>
-                                <option value="Outro">Outro</option>
+                                <option value="Declaração de Comparecimento">Declaração de Comparecimento</option>
+                                <option value="Folga Compensatória">Folga Compensatória</option>
+                                <option value="Outro">Outro (Especificar)</option>
                             </select>
                         </div>
+
+                        {formData.reason === 'Outro' && (
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                    Especifique o Motivo *
+                                </label>
+                                <input
+                                    type="text"
+                                    value={formData.customReason}
+                                    onChange={(e) => setFormData({ ...formData, customReason: e.target.value })}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Ex: Treinamento Externo"
+                                    required
+                                />
+                            </div>
+                        )}
 
                         {formData.type === 'PARTIAL' && (
                             <div>
