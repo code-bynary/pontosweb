@@ -165,8 +165,8 @@ echo ""
 ###############################################################################
 print_info "4/6 - Atualizando código do GitHub..."
 
-# Tentar voltar para a branch main se estiver em uma tag ou branch errada
-git checkout main 2>/dev/null || print_warning "Não foi possível mudar para branch main automaticamente."
+# Tentar voltar para a branch stable se estiver em uma tag ou branch errada
+git checkout stable 2>/dev/null || print_warning "Não foi possível mudar para branch stable automaticamente."
 
 # Salvar mudanças locais (se houver)
 if [ -n "$(git status --porcelain)" ]; then
@@ -175,7 +175,7 @@ if [ -n "$(git status --porcelain)" ]; then
 fi
 
 # Puxar atualizações
-git pull origin main
+git pull origin stable
 
 print_success "Código atualizado!"
 echo ""
