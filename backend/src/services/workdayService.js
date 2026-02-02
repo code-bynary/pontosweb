@@ -37,7 +37,8 @@ export async function getMonthlyTimecard(employeeId, year, month) {
     // Calculate total hours
     const workedMinutes = workdays.reduce((sum, wd) => sum + wd.workedMinutes, 0);
     const expectedMinutes = workdays.reduce((sum, wd) => sum + wd.expectedMinutes, 0);
-    const balanceMinutes = workdays.reduce((sum, wd) => sum + wd.balanceMinutes, 0);
+    const totalAbonoMinutes = workdays.reduce((sum, wd) => sum + (wd.abono?.minutes || 0), 0);
+    const balanceMinutes = (workedMinutes + totalAbonoMinutes) - expectedMinutes;
 
     const formatMins = (mins) => {
         const abs = Math.abs(mins);
@@ -70,7 +71,8 @@ export async function getMonthlyTimecard(employeeId, year, month) {
                 expectedMinutes: wd.expectedMinutes,
                 abonoMinutes: abonoMinutes,
                 totalMinutes: totalMinutes,
-                extraMinutes: wd.extraMinutes,
+                // Extra minutes should only come from actually worked time exceeding expected
+                extraMinutes: Math.max(0, wd.workedMinutes - wd.expectedMinutes),
                 balanceMinutes: balanceWithAbono,
                 totalHours: formatMins(totalMinutes),
                 status: wd.status,
