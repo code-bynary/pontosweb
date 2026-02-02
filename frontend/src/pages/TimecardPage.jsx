@@ -105,7 +105,7 @@ export default function TimecardPage() {
                         ← Voltar
                     </button>
                     <h1 className="text-3xl font-bold text-primary-600">
-                        Cartão de Ponto <span className="text-sm font-normal text-gray-400 ml-2">v1.3.6</span>
+                        Cartão de Ponto <span className="text-sm font-normal text-gray-400 ml-2">v1.3.8</span>
                     </h1>
                     <p className="text-gray-600 mt-1">
                         {timecard.employee.name} ({timecard.employee.enNo})
@@ -211,8 +211,9 @@ export default function TimecardPage() {
                             <div className="bg-white border border-gray-100 shadow-sm p-4 rounded-xl">
                                 <p className="text-gray-500 text-xs uppercase font-bold mb-1">Abonado</p>
                                 <p className="text-2xl font-bold text-blue-600">{timecard.stats.totalAbonoHours}h</p>
-                                <div className="mt-1 flex gap-2">
-                                    <span className="text-[10px] text-gray-400">Total: {timecard.stats.abonoByCategory.FULL_DAY + timecard.stats.abonoByCategory.PARTIAL}</span>
+                                <div className="mt-1 flex flex-wrap gap-x-2">
+                                    <span className="text-[10px] text-blue-400 font-medium whitespace-nowrap">D. Inteiros: {timecard.stats.abonoByCategory.FULL_DAY}</span>
+                                    <span className="text-[10px] text-blue-400 font-medium whitespace-nowrap">Parciais: {timecard.stats.abonoByCategory.PARTIAL}</span>
                                 </div>
                             </div>
 

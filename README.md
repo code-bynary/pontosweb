@@ -58,6 +58,12 @@ Sistema moderno e eficiente para controle de ponto eletrônico, desenvolvido esp
 - **Infra**: Scripts de backup automático e restore 100% validados.
 - **Rede**: Configuração otimizada para acesso via IP público e DNS.
 
+### Atualização v1.3.8
+- Implementação de Dashboard de Estatísticas Detalhadas.
+- Resumo de exportação PDF/Excel com horas extras, atrasos e abonos.
+- Campo de assinatura para colaboradores no relatório PDF.
+- Correção na lógica de cálculo de saldo mensal com abonos.
+
 ### [0.1.0 a 1.1.4] - Betas e Hotfixes
 - Correção de permissões Prisma Shadow Database.
 - Implementação de deduplicação de batidas.
