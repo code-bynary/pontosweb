@@ -17,11 +17,17 @@
 - **Backend**: Node.js (Express), Prisma ORM, MySQL/MariaDB.
 - **Frontend**: React (Vite), Tailwind CSS, Headless UI.
 - **Relatórios**: PDFKit e ExcelJS.
-- **Marco**: v1.3.8 - Versão de maturidade e consolidada.
+- **Marco**: v1.4.0 - Sistema de Relatórios Gerenciais.
 
 ---
 
 ## 📋 Changelog Recente
+
+### [v1.4.0] - 📊 Relatórios Gerenciais (2026-02-02)
+- **Relatórios Gerenciais**: Novo módulo para visão consolidada de todos os funcionários (Extras, Atrasos, Saldo).
+- **Exportação Master**: Novo exportador Excel consolidado da empresa por mês.
+- **PDF A4 Industrial**: Otimização do layout para folha A4 nativa, garantindo assinatura em página única.
+- **Nomes Dinâmicos**: Arquivos de exportação agora utilizam o padrão `Cartao_Ponto_Nome_Mes.pdf`.
 
 ### [v1.3.8] - 🏆 Milestone: O Divisor de Águas (2026-02-02)
 - **Consolidação**: Esta versão representa a maturidade total do sistema.
@@ -62,7 +68,7 @@ chmod +x install-debian.sh
 
 ---
 
-© 2026 PontosWeb - Versão Estável 1.3.8
+© 2026 PontosWeb - Versão Estável 1.4.0
 
 ## 📋 Funcionalidades
 
@@ -277,7 +283,7 @@ O projeto segue [Semantic Versioning](https://semver.org/):
 - **MINOR**: Novas funcionalidades (compatíveis)
 - **PATCH**: Correções de bugs
 
-**Versão Atual**: v1.3.8
+**Versão Atual**: v1.4.0
 
 Ver todas as versões: [Releases](https://github.com/code-bynary/pontosweb/releases)
 
@@ -339,7 +345,13 @@ Menu interativo permite restaurar:
 
 ### Changelog
 
-#### v1.0.0 (2026-01-08)
+#### v1.4.0 (2026-02-02)
+- ✅ Módulo de Relatórios Gerenciais (Visão Macro)
+- ✅ Exportação Excel Consolidada (Empresa)
+- ✅ Otimização de PDF para tamanho A4
+- ✅ Nomenclatura dinâmica de arquivos exportados
+
+#### v1.3.8 (2026-02-02)
 - 🎉 Release inicial
 - ✅ Sistema completo de controle de ponto
 - ✅ Importação de arquivos TXT
