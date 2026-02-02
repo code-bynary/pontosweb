@@ -66,11 +66,14 @@ export default function EmployeeList({ employees, onUpdate }) {
                         <tbody>
                             {employees.map((employee) => (
                                 <tr key={employee.id} className={employee.isTreated ? 'opacity-50 grayscale select-none bg-gray-50/50' : ''}>
-                                    <td>
+                                    <td onClick={(e) => e.stopPropagation()}>
                                         <input
                                             type="checkbox"
                                             checked={employee.isTreated || false}
-                                            onChange={() => handleToggleTreated(employee.id)}
+                                            onChange={(e) => {
+                                                console.log(`Toggling employee ${employee.id}`);
+                                                handleToggleTreated(employee.id);
+                                            }}
                                             className="w-5 h-5 rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer"
                                             title="Marcar como conferido"
                                         />
