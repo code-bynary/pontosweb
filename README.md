@@ -1,6 +1,6 @@
 # PontosWeb 🕒
 
-[![Versão](https://img.shields.io/badge/vers%C3%A3o-v1.7.6-blue?style=for-the-badge)
+[![Versão](https://img.shields.io/badge/vers%C3%A3o-v1.7.7-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/status-est%C3%A1vel-green?style=for-the-badge)
 ![Milestone](https://img.shields.io/badge/milestone-rh_master-gold?style=for-the-badge)
 
@@ -286,7 +286,7 @@ O projeto segue [Semantic Versioning](https://semver.org/):
 - **MINOR**: Novas funcionalidades (compatíveis)
 - **PATCH**: Correções de bugs
 
-**Versão Atual**: v1.7.6
+**Versão Atual**: v1.7.7
 
 Ver todas as versões: [Releases](https://github.com/code-bynary/pontosweb/releases)
 
@@ -347,6 +347,9 @@ Menu interativo permite restaurar:
 - `hotfix/*` - Correções urgentes
 
 ### Changelog
+
+#### v1.7.7 (2026-02-02)
+- ✅ Correção Crítica de Layout: Reestruturação de containers flex para visualização mobile e desktop.
 
 #### v1.7.6 (2026-02-02)
 - ✅ Abonos Visualmente Identificados (Ícones 🏥🏠 e Cores 🔴🟢🟡).
