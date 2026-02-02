@@ -34,7 +34,7 @@ export default function UploadPage() {
                 <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
                     <div>
                         <h1 className="text-3xl font-bold text-primary-600">
-                            ⏰ PontosWeb <span className="text-sm font-normal text-gray-400">v1.4.0</span>
+                            📊 Dashboard <span className="text-sm font-normal text-gray-400">v1.6.0</span>
                         </h1>
                         <p className="text-gray-600 mt-1">Sistema de Controle de Ponto Eletrônico</p>
                     </div>

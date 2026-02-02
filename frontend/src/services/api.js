@@ -63,6 +63,16 @@ export const updateEmployeeSchedule = async (employeeId, schedule) => {
     return response.data;
 };
 
+export const toggleEmployeeTreatment = async (employeeId) => {
+    const response = await api.patch(`/employees/${employeeId}/toggle-treatment`);
+    return response.data;
+};
+
+export const resetAllTreatment = async () => {
+    const response = await api.post('/employees/reset-treatment');
+    return response.data;
+};
+
 export const getWorkdayHistory = async (workdayId) => {
     const response = await api.get(`/workday/${workdayId}/history`);
     return response.data;

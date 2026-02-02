@@ -20,13 +20,30 @@ model Employee {
   workStart1 String?    @default("08:00") @db.VarChar(5)
   workEnd1   String?    @default("12:00") @db.VarChar(5)
   workStart2 String?    @default("13:00") @db.VarChar(5)
-  workEnd2   String?    @default("17:48") @db.VarChar(5)
+  workEnd2       String?    @default("17:48") @db.VarChar(5)
+  isTreated      Boolean    @default(false)
 
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  // RH Data (v2.0.0)
+  startDate      DateTime?  @db.Date
+  regDate        DateTime?  @db.Date
+  jobTitle       String?    @db.VarChar(100)
+  salary         Decimal?   @db.Decimal(10, 2)
+  address        String?    @db.VarChar(255)
+  phone          String?    @db.VarChar(20)
+  cpf            String?    @unique @db.VarChar(14)
+  rg             String?    @db.VarChar(20)
+  pis            String?    @db.VarChar(20)
+  reservista     String?    @db.VarChar(20)
+  titulo         String?    @db.VarChar(20)
+  fatherName     String?    @db.VarChar(255)
+  motherName     String?    @db.VarChar(255)
+  childrenInfo   Json?      // Stores [{name: string, age: number}]
+
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
   
-  punches    Punch[]
-  workdays   Workday[]
+  punches        Punch[]
+  workdays       Workday[]
   
   @@map("employees")
 }

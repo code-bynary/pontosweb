@@ -32,7 +32,8 @@ export async function getAllEmployees(req, res) {
                     workStart1: emp.workStart1,
                     workEnd1: emp.workEnd1,
                     workStart2: emp.workStart2,
-                    workEnd2: emp.workEnd2
+                    workEnd2: emp.workEnd2,
+                    isTreated: emp.isTreated
                 };
             })
         );
@@ -101,6 +102,50 @@ export async function updateEmployeeSchedule(req, res) {
         res.json({ success: true, employee });
     } catch (error) {
         console.error('Update schedule error:', error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+/**
+ * Toggle employee treatment status
+ */
+export async function toggleEmployeeTreatment(req, res) {
+    try {
+        const { id } = req.params;
+
+        const employee = await prisma.employee.findUnique({
+            where: { id: parseInt(id) },
+            select: { isTreated: true }
+        });
+
+        if (!employee) {
+            return res.status(404).json({ error: 'Employee not found' });
+        }
+
+        const updated = await prisma.employee.update({
+            where: { id: parseInt(id) },
+            data: { isTreated: !employee.isTreated }
+        });
+
+        res.json({ success: true, isTreated: updated.isTreated });
+    } catch (error) {
+        console.error('Toggle treatment error:', error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+/**
+ * Reset all employees treatment status
+ */
+export async function resetAllTreatment(req, res) {
+    try {
+        await prisma.employee.updateMany({
+            data: { isTreated: false }
+        });
+
+        res.json({ success: true, message: 'Conferência resetada com sucesso' });
+    } catch (error) {
+        console.error('Reset treatment error:', error);
         res.status(500).json({ error: error.message });
     }
 }
