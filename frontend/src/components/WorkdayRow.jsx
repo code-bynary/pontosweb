@@ -25,6 +25,20 @@ const getAbonoStyle = (reason) => {
     return 'bg-gray-100 text-gray-800 border-gray-200';
 };
 
+const getAbonoIcon = (reason) => {
+    const r = reason.toLowerCase();
+    if (r.includes('atestado') || r.includes('médico') || r.includes('odontológico') || r.includes('psicológico')) {
+        return '🏥';
+    }
+    if (r.includes('folga')) {
+        return '🏠';
+    }
+    if (r.includes('declaração') || r.includes('comparecimento')) {
+        return '📄';
+    }
+    return '🔘';
+};
+
 export default function WorkdayRow({ workday, onUpdate, onAbono }) {
     const [editing, setEditing] = useState(false);
     const [values, setValues] = useState({
@@ -126,8 +140,13 @@ export default function WorkdayRow({ workday, onUpdate, onAbono }) {
             <td className={workday.abonoMinutes > 0 ? 'text-blue-600 font-medium' : 'text-gray-400'}>
                 {workday.abonoMinutes > 0 ? formatMinutes(workday.abonoMinutes) : '-'}
                 {workday.abono && (
-                    <div className={`mt-1 text-[10px] font-bold px-2 py-0.5 rounded border uppercase inline-block ${getAbonoStyle(workday.abono.reason)}`}>
-                        {workday.abono.reason}
+                    <div
+                        className={`ml-2 text-lg inline-block cursor-help transition-transform hover:scale-125`}
+                        title={`Abono: ${workday.abono.reason}`}
+                    >
+                        <span className={`px-1 rounded border shadow-sm ${getAbonoStyle(workday.abono.reason)}`}>
+                            {getAbonoIcon(workday.abono.reason)}
+                        </span>
                     </div>
                 )}
             </td>
