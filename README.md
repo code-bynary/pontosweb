@@ -1,12 +1,12 @@
 # PontosWeb 🕒
 
-[![Version](https://img.shields.io/badge/version-1.3.4--stable-green.svg)](https://github.com/code-bynary/pontosweb/releases/latest)
+[![Version](https://img.shields.io/badge/version-1.3.6--stable-green.svg)](https://github.com/code-bynary/pontosweb/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Sistema moderno e eficiente para controle de ponto eletrônico, desenvolvido especificamente para processar arquivos de exportação de relógios biométricos.
 
 > [!IMPORTANT]
-> **Versão 1.3.4 (Stable)**: Refatoração completa do motor de cálculo, tratamento de batidas redundantes, finais de semana e funcionalidade de recálculo manual.
+> **Versão 1.3.6 (Stable)**: Sistema completo de abonos de atestados médicos com upload de documentos e cálculo automático de horas.
 
 ---
 
@@ -19,6 +19,20 @@ Sistema moderno e eficiente para controle de ponto eletrônico, desenvolvido esp
 ---
 
 ## 📋 Changelog Recente
+
+### [v1.3.6] - Stable Release (2026-02-02)
+- **Sistema de Abonos**: Implementação completa para abonar dias com atestados médicos, odontológicos e outros.
+- **Abono Completo**: Abona o dia inteiro, zerando a necessidade de batidas.
+- **Abono Parcial**: Abona apenas as horas faltantes, complementando o tempo trabalhado.
+- **Upload de Documentos**: Anexe atestados em PDF, JPG ou PNG (até 5MB).
+- **Cálculo Automático**: Horas abonadas são somadas automaticamente ao total trabalhado.
+- **Interface**: Modal intuitivo, coluna "Abonado" na tabela, badge "ABONADO" nos dias.
+
+### [v1.3.5] - Stable Release (2026-02-02)
+- **Sistema de Feriados**: Cadastro de feriados nacionais, municipais e folgas compensadas.
+- **Cálculo Automático**: Carga horária zerada automaticamente em feriados cadastrados.
+- **Interface**: Página dedicada para gerenciar feriados com filtro por ano.
+- **Integração**: Feriados são considerados automaticamente no cálculo de saldo mensal.
 
 ### [v1.3.4] - Stable Release (2026-02-02)
 - **Fix Cálculo de Horas**: Refatoração completa da lógica de pareamento (In/Out) para suportar turnos noturnos de forma robusta.
