@@ -1,12 +1,12 @@
 # PontosWeb 🕒
 
-[![Version](https://img.shields.io/badge/version-1.3.6--stable-green.svg)](https://github.com/code-bynary/pontosweb/releases/latest)
+[![Version](https://img.shields.io/badge/version-1.3.8--stable-green.svg)](https://github.com/code-bynary/pontosweb/releases/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Sistema moderno e eficiente para controle de ponto eletrônico, desenvolvido especificamente para processar arquivos de exportação de relógios biométricos.
 
 > [!IMPORTANT]
-> **Versão 1.3.6 (Stable)**: Sistema completo de abonos de atestados médicos com upload de documentos e cálculo automático de horas.
+> **Versão 1.3.8 (Stable)**: Dashboard de estatísticas detalhadas, resumos em PDF/Excel com campo de assinatura e cálculos aprimorados.
 
 ---
 
@@ -20,49 +20,15 @@ Sistema moderno e eficiente para controle de ponto eletrônico, desenvolvido esp
 
 ## 📋 Changelog Recente
 
+### [v1.3.8] - Stable Release (2026-02-02)
+- **Dashboard Estatístico**: Novo resumo visual no cartão de ponto com extras, atrasos e abonos detalhados.
+- **Relatórios PDF Premium**: Adicionado resumo mensal detalhado e campos para assinatura do colaborador e responsável.
+- **Excel Detalhado**: Inclusão de estatísticas e saldo final formatado.
+- **Fix Cálculo**: Ajuste na lógica de saldo mensal para considerar abonos e evitar horas extras indevidas.
+
 ### [v1.3.6] - Stable Release (2026-02-02)
-- **Sistema de Abonos**: Implementação completa para abonar dias com atestados médicos, odontológicos e outros.
-- **Abono Completo**: Abona o dia inteiro, zerando a necessidade de batidas.
-- **Abono Parcial**: Abona apenas as horas faltantes, complementando o tempo trabalhado.
-- **Upload de Documentos**: Anexe atestados em PDF, JPG ou PNG (até 5MB).
-- **Cálculo Automático**: Horas abonadas são somadas automaticamente ao total trabalhado.
-- **Interface**: Modal intuitivo, coluna "Abonado" na tabela, badge "ABONADO" nos dias.
-
-### [v1.3.5] - Stable Release (2026-02-02)
-- **Sistema de Feriados**: Cadastro de feriados nacionais, municipais e folgas compensadas.
-- **Cálculo Automático**: Carga horária zerada automaticamente em feriados cadastrados.
-- **Interface**: Página dedicada para gerenciar feriados com filtro por ano.
-- **Integração**: Feriados são considerados automaticamente no cálculo de saldo mensal.
-
-### [v1.3.4] - Stable Release (2026-02-02)
-- **Fix Cálculo de Horas**: Refatoração completa da lógica de pareamento (In/Out) para suportar turnos noturnos de forma robusta.
-- **Fix Redundância**: Sistema agora ignora automaticamente batidas duplicadas (intervalo < 5min).
-- **Fix Finais de Semana**: Carga horária esperada zerada automaticamente para sábados e domingos.
-- **Recálculo Manual**: Adicionado botão "Recalcular Mês" para processar batidas brutas com a nova lógica.
-- **UI**: Exibição visual da versão no cabeçalho do sistema.
-- **Bugfix**: Sincronização de totais no rodapé do cartão de ponto.
-
-### [v1.3.3] - Hotfix (2026-01-08)
-- **Fix Timezone**: Corrigido agrupamento de batidas usando horário local (evita que batidas após as 21:00 pulem para o dia seguinte).
-- **Fix Meia-Noite**: Adicionado suporte para cálculos de jornadas que cruzam a meia-noite.
-
-### [v1.3.2] - Stable Release (2026-01-08)
-- **Fix Cálculos**: Corrigido erro de "NaN" nos relatórios mensais ao alinhar campos do servidor com o banco de dados.
-- **Fix Crash**: Restaurada exportação ausente no serviço de API que causava tela branca.
-- **Estabilidade**: Sincronização de `package-lock.json` para deploys determinísticos.
-
-### [v1.2.0] - Stable Release (2026-01-08)
-- **Fix Estabilidade**: Implementado sistema de limpeza de processos zumbis na porta 3001.
-- **Fix Data/Hora**: Parser de TXT refatorado para ignorar fusos horários e manter precisão local.
-- **Automação**: Geração imediata de jornadas após upload do arquivo.
-- **Infra**: Scripts de backup automático e restore 100% validados.
-- **Rede**: Configuração otimizada para acesso via IP público e DNS.
-
-### Atualização v1.3.8
-- Implementação de Dashboard de Estatísticas Detalhadas.
-- Resumo de exportação PDF/Excel com horas extras, atrasos e abonos.
-- Campo de assinatura para colaboradores no relatório PDF.
-- Correção na lógica de cálculo de saldo mensal com abonos.
+- **Sistema de Abonos**: Implementação completa para abonar dias com atestados médicos e parciais.
+- **Upload de Documentos**: Suporte para anexos de atestados (PDF/Imagens).
 
 ### [0.1.0 a 1.1.4] - Betas e Hotfixes
 - Correção de permissões Prisma Shadow Database.
@@ -92,7 +58,7 @@ chmod +x install-debian.sh
 
 ---
 
-© 2026 PontosWeb - Versão Estável 1.3.4
+© 2026 PontosWeb - Versão Estável 1.3.8
 
 ## 📋 Funcionalidades
 
@@ -307,7 +273,7 @@ O projeto segue [Semantic Versioning](https://semver.org/):
 - **MINOR**: Novas funcionalidades (compatíveis)
 - **PATCH**: Correções de bugs
 
-**Versão Atual**: v1.3.4
+**Versão Atual**: v1.3.8
 
 Ver todas as versões: [Releases](https://github.com/code-bynary/pontosweb/releases)
 
