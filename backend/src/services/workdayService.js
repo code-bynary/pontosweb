@@ -122,7 +122,7 @@ export async function updateWorkday(workdayId, updates, reason = null, createdBy
     });
 
     // Get actual expected minutes for this day (handles weekends correctly)
-    const expectedMinutes = calculateDailyExpectedMinutes(employee, workday.date);
+    const expectedMinutes = await calculateDailyExpectedMinutes(employee, workday.date);
 
     updateData.expectedMinutes = expectedMinutes;
     updateData.balanceMinutes = updateData.workedMinutes - expectedMinutes;

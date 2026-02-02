@@ -89,6 +89,25 @@ model Adjustment {
   @@map("adjustments")
 }
 
+model Holiday {
+  id          Int      @id @default(autoincrement())
+  date        DateTime @unique @db.Date
+  name        String   @db.VarChar(255)
+  type        HolidayType
+  description String?  @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([date])
+  @@map("holidays")
+}
+
+enum HolidayType {
+  NATIONAL
+  MUNICIPAL
+  COMPENSATORY
+}
+
 enum Status {
   OK
   INCOMPLETE

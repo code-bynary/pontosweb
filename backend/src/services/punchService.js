@@ -196,7 +196,7 @@ async function updateWorkdayFromPairs(employeeId, date, pairs) {
     });
 
     // Calculate expected minutes
-    const expectedMinutes = calculateDailyExpectedMinutes(employee, workdayDate);
+    const expectedMinutes = await calculateDailyExpectedMinutes(employee, workdayDate);
 
     // Calculate balance and extra
     const balanceMinutes = workedMinutes - expectedMinutes;

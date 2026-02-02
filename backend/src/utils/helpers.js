@@ -151,9 +151,9 @@ export function timeStringToDate(timeStr) {
 
 /**
  * Calculates the expected work minutes for a given day and employee.
- * Accounts for weekends (Saturday/Sunday = 0 minutes).
+ * Accounts for weekends (Saturday/Sunday = 0 minutes) and holidays.
  */
-export function calculateDailyExpectedMinutes(employee, date) {
+export async function calculateDailyExpectedMinutes(employee, date) {
     if (!employee) return 0;
 
     // date can be a string or Date object
@@ -164,6 +164,19 @@ export function calculateDailyExpectedMinutes(employee, date) {
     const dayOfWeek = d.getUTCDay();
     if (dayOfWeek === 0 || dayOfWeek === 6) {
         return 0;
+    }
+
+    // Check if it's a holiday (requires async check)
+    // Note: This function is now async
+    try {
+        const { isHoliday } = await import('../services/holidayService.js');
+        const holiday = await isHoliday(d);
+        if (holiday) {
+            return 0;
+        }
+    } catch (error) {
+        // If holiday service fails, continue with normal calculation
+        console.error('Error checking holiday:', error);
     }
 
     const parseTimeToMinutes = (timeStr) => {
