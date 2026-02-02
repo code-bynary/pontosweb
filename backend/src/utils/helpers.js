@@ -88,6 +88,7 @@ export function parsePunchFile(fileContent) {
 
 /**
  * Calculate total minutes worked from time strings
+ * Returns 0 if the time range appears invalid (e.g., out of order punches)
  */
 export function calculateTotalMinutes(entrada1, saida1, entrada2, saida2) {
     let total = 0;
@@ -96,7 +97,16 @@ export function calculateTotalMinutes(entrada1, saida1, entrada2, saida2) {
         const [h1, m1] = entrada1.split(':').map(Number);
         const [h2, m2] = saida1.split(':').map(Number);
         let diff = (h2 * 60 + m2) - (h1 * 60 + m1);
-        if (diff < 0) diff += 1440; // Midnight crossing (add 24h)
+
+        // If negative, it might be a midnight crossing OR invalid data
+        if (diff < 0) {
+            diff += 1440; // Add 24 hours
+            // Sanity check: a valid night shift should be < 16 hours
+            // If it's more, the punches are likely out of order
+            if (diff > 960) { // 16 hours
+                return 0; // Invalid data
+            }
+        }
         total += diff;
     }
 
@@ -104,7 +114,13 @@ export function calculateTotalMinutes(entrada1, saida1, entrada2, saida2) {
         const [h1, m1] = entrada2.split(':').map(Number);
         const [h2, m2] = saida2.split(':').map(Number);
         let diff = (h2 * 60 + m2) - (h1 * 60 + m1);
-        if (diff < 0) diff += 1440; // Midnight crossing (add 24h)
+
+        if (diff < 0) {
+            diff += 1440;
+            if (diff > 960) {
+                return 0; // Invalid data
+            }
+        }
         total += diff;
     }
 
