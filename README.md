@@ -5,10 +5,10 @@
 ![Milestone](https://img.shields.io/badge/milestone-rh_master-gold?style=for-the-badge)
 
 > [!IMPORTANT]
-> **Versão v1.4.0 - Relatórios Gerenciais**: Implementação de relatórios consolidados da empresa, permitindo visão macro de extras, atrasos e saldos de todos os funcionários de uma só vez, além de otimização industrial do PDF A4.
+> **Versão v1.7.6 - Abonos Inteligentes**: Nova interface visual com ícones (🏥 Saúde, 🏠 Folga, 📄 Doc), mapa de cores dinâmico e legenda informativa para total clareza na gestão de ausências.
 
 > [!IMPORTANT]
-> **Versão 1.3.8 (Milestone)**: O "Divisor de Águas" do projeto. Maturidade total com dashboard estatístico, gestão de abonos, relatórios com assinatura e precisão absoluta nos cálculos.
+> **Versão v1.6.0 - Checklist de RH**: Implementação do fluxo de conferência mensal. Marque funcionários como "Tratados" e gerencie o checklist global de fechamento.
 
 ---
 
@@ -17,7 +17,7 @@
 - **Backend**: Node.js (Express), Prisma ORM, MySQL/MariaDB.
 - **Frontend**: React (Vite), Tailwind CSS, Headless UI.
 - **Relatórios**: PDFKit e ExcelJS.
-- **Marco**: v1.4.0 - Sistema de Relatórios Gerenciais.
+- **Marco**: v1.7.6 - Gestão Visual de Abonos e Checklist de RH.
 
 ---
 
