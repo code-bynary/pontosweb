@@ -1,6 +1,8 @@
 import prisma from '../utils/prisma.js';
 import { parsePunchFile } from '../utils/helpers.js';
 
+// Antigravity: Início da refatoração do cálculo de horas (fix/calculation-and-recalc-logic)
+
 /**
  * Import punch records from TXT file
  */
