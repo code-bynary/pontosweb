@@ -20,7 +20,7 @@ export async function getMonthlyTimecard(employeeId, year, month) {
     // Fetch workdays with abonos
     const workdays = await prisma.workday.findMany({
         where: {
-            employeeId,
+            employeeId: parseInt(employeeId),
             date: {
                 gte: startDate,
                 lte: endDate
