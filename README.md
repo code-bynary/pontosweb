@@ -1,9 +1,8 @@
-```
 # PontosWeb 🕒
 
-[![Version](https://img.shields.io/badge/version-1.7.6-blue.svg)
-![Build](https://img.shields.io/badge/build-stable-green.svg)
-![Milestone](https://img.shields.io/badge/milestone-inteligencia-gold?style=for-the-badge)
+[![Versão](https://img.shields.io/badge/vers%C3%A3o-v1.7.6-blue?style=for-the-badge)
+![Status](https://img.shields.io/badge/status-est%C3%A1vel-green?style=for-the-badge)
+![Milestone](https://img.shields.io/badge/milestone-rh_master-gold?style=for-the-badge)
 
 > [!IMPORTANT]
 > **Versão v1.4.0 - Relatórios Gerenciais**: Implementação de relatórios consolidados da empresa, permitindo visão macro de extras, atrasos e saldos de todos os funcionários de uma só vez, além de otimização industrial do PDF A4.
