@@ -6,7 +6,7 @@
 Sistema moderno e eficiente para controle de ponto eletrônico, desenvolvido especificamente para processar arquivos de exportação de relógios biométricos.
 
 > [!IMPORTANT]
-> **Versão 1.3.8 (Stable)**: Dashboard de estatísticas detalhadas, resumos em PDF/Excel com campo de assinatura e cálculos aprimorados.
+> **Versão 1.3.8 (Milestone)**: O "Divisor de Águas" do projeto. Maturidade total com dashboard estatístico, gestão de abonos, relatórios com assinatura e precisão absoluta nos cálculos.
 
 ---
 
@@ -15,12 +15,14 @@ Sistema moderno e eficiente para controle de ponto eletrônico, desenvolvido esp
 - **Backend**: Node.js (Express), Prisma ORM, MySQL/MariaDB.
 - **Frontend**: React (Vite), Tailwind CSS, Headless UI.
 - **Relatórios**: PDFKit e ExcelJS.
+- **Marco**: v1.3.8 - Versão de maturidade e consolidada.
 
 ---
 
 ## 📋 Changelog Recente
 
-### [v1.3.8] - Stable Release (2026-02-02)
+### [v1.3.8] - 🏆 Milestone: O Divisor de Águas (2026-02-02)
+- **Consolidação**: Esta versão representa a maturidade total do sistema.
 - **Dashboard Estatístico**: Novo resumo visual no cartão de ponto com extras, atrasos e abonos detalhados.
 - **Relatórios PDF Premium**: Adicionado resumo mensal detalhado e campos para assinatura do colaborador e responsável.
 - **Excel Detalhado**: Inclusão de estatísticas e saldo final formatado.
