@@ -1,8 +1,8 @@
 # PontosWeb 🕒
 
-[![Versão](https://img.shields.io/badge/vers%C3%A3o-v1.4.0-blue?style=for-the-badge)
+[![Versão](https://img.shields.io/badge/vers%C3%A3o-v1.5.0-blue?style=for-the-badge)
 ![Status](https://img.shields.io/badge/status-est%C3%A1vel-green?style=for-the-badge)
-![Milestone](https://img.shields.io/badge/milestone-relat%C3%B3rios-gold?style=for-the-badge)
+![Milestone](https://img.shields.io/badge/milestone-inteligencia-gold?style=for-the-badge)
 
 > [!IMPORTANT]
 > **Versão v1.4.0 - Relatórios Gerenciais**: Implementação de relatórios consolidados da empresa, permitindo visão macro de extras, atrasos e saldos de todos os funcionários de uma só vez, além de otimização industrial do PDF A4.
@@ -21,7 +21,10 @@
 
 ---
 
-## 📋 Changelog Recente
+### [v1.5.0] - 🧠 Inteligência de Batidas (2026-02-02)
+- **Barreira de Dia Calendário**: Refatoração total do motor de cálculos para garantir que batidas fiquem restritas ao seu dia, eliminando o erro de deslocamento em cascata.
+- **Deduplicação Protetiva (15 min)**: Filtro inteligente que ignora batidas redundantes em janelas de 15 minutos, evitando duplicidade por esquecimento ou "certeza" do funcionário.
+- **Robustez de Pareamento**: Tratamento de batidas órfãs sem afetar a integridade dos dias subsequentes.
 
 ### [v1.4.0] - 📊 Relatórios Gerenciais (2026-02-02)
 - **Relatórios Gerenciais**: Novo módulo para visão consolidada de todos os funcionários (Extras, Atrasos, Saldo).
@@ -68,7 +71,7 @@ chmod +x install-debian.sh
 
 ---
 
-© 2026 PontosWeb - Versão Estável 1.4.0
+© 2026 PontosWeb - Versão Estável 1.5.0
 
 ## 📋 Funcionalidades
 
@@ -283,7 +286,7 @@ O projeto segue [Semantic Versioning](https://semver.org/):
 - **MINOR**: Novas funcionalidades (compatíveis)
 - **PATCH**: Correções de bugs
 
-**Versão Atual**: v1.4.0
+**Versão Atual**: v1.5.0
 
 Ver todas as versões: [Releases](https://github.com/code-bynary/pontosweb/releases)
 

@@ -89,13 +89,13 @@ export async function importPunchFile(fileContent) {
  * Generate workday records from punches
  */
 export async function generateWorkdays(employeeId, startDate, endDate) {
-    // Get all punches for employee in date range with 1 day buffer
+    // Get all punches for employee in date range with 1 day buffer (just in case of midnight crossing, though we map to local day)
     const bufferStart = new Date(startDate);
     bufferStart.setDate(bufferStart.getDate() - 1);
     const bufferEnd = new Date(endDate);
     bufferEnd.setDate(bufferEnd.getDate() + 1);
 
-    const punches = await prisma.punch.findMany({
+    const allPunches = await prisma.punch.findMany({
         where: {
             employeeId,
             dateTime: {
@@ -108,47 +108,27 @@ export async function generateWorkdays(employeeId, startDate, endDate) {
         }
     });
 
-    // 1. Filter out redundant punches (e.g., within 5 minutes)
-    const filteredPunches = [];
-    const MIN_PUNCH_INTERVAL = 5 * 60 * 1000; // 5 minutes
-
-    punches.forEach(punch => {
-        const lastPunch = filteredPunches[filteredPunches.length - 1];
-        if (!lastPunch || (punch.dateTime.getTime() - lastPunch.dateTime.getTime()) > MIN_PUNCH_INTERVAL) {
-            filteredPunches.push(punch);
-        }
-    });
-
-    // 2. Pair punches (In, Out)
-    const pairs = [];
-    for (let i = 0; i < filteredPunches.length; i += 2) {
-        const inPunch = filteredPunches[i];
-        const outPunch = filteredPunches[i + 1] || null;
-
-        // Only keep if the pair starts within the requested range
-        // or if it's a night shift that might belong to a day within range
-        pairs.push({ inPunch, outPunch });
-    }
-
-    // 3. Group pairs by the date of the "In" punch
-    const pairsByDate = {};
-    pairs.forEach(pair => {
-        const d = new Date(pair.inPunch.dateTime);
+    // 1. Group ALL punches by Local Date (YYYY-MM-DD)
+    const punchesByDate = {};
+    allPunches.forEach(punch => {
+        const d = new Date(punch.dateTime);
         const year = d.getFullYear();
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const day = String(d.getDate()).padStart(2, '0');
         const dateKey = `${year}-${month}-${day}`;
 
-        if (!pairsByDate[dateKey]) {
-            pairsByDate[dateKey] = [];
+        if (!punchesByDate[dateKey]) {
+            punchesByDate[dateKey] = [];
         }
-        pairsByDate[dateKey].push(pair);
+        punchesByDate[dateKey].push(punch);
     });
 
-    // 4. Update workdays for the requested range
+    // 2. Process each day in the requested range
     const resultWorkdays = [];
     const current = new Date(startDate);
     const end = new Date(endDate);
+
+    const MIN_PUNCH_INTERVAL = 15 * 60 * 1000; // 15 minutes deduplication window
 
     while (current <= end) {
         const year = current.getFullYear();
@@ -156,8 +136,20 @@ export async function generateWorkdays(employeeId, startDate, endDate) {
         const day = String(current.getDate()).padStart(2, '0');
         const dateKey = `${year}-${month}-${day}`;
 
-        const dayPairs = pairsByDate[dateKey] || [];
-        const workday = await updateWorkdayFromPairs(employeeId, dateKey, dayPairs);
+        const rawDayPunches = punchesByDate[dateKey] || [];
+
+        // Deduplicate punches for this specific day
+        const dayPunches = [];
+        rawDayPunches.forEach(punch => {
+            const lastPunch = dayPunches[dayPunches.length - 1];
+            // Only add if it's the first punch or sufficiently distant from the last one
+            if (!lastPunch || (punch.dateTime.getTime() - lastPunch.dateTime.getTime()) > MIN_PUNCH_INTERVAL) {
+                dayPunches.push(punch);
+            }
+        });
+
+        // Update workday for this day specifically
+        const workday = await updateWorkdayFromPunches(employeeId, dateKey, dayPunches);
         resultWorkdays.push(workday);
 
         current.setDate(current.getDate() + 1);
@@ -167,9 +159,17 @@ export async function generateWorkdays(employeeId, startDate, endDate) {
 }
 
 /**
- * Update or create workday from a list of punch pairs
+ * Update or create workday from a list of punches
  */
-async function updateWorkdayFromPairs(employeeId, date, pairs) {
+async function updateWorkdayFromPunches(employeeId, date, dayPunches) {
+    // 1. Group punches into pairs within the day
+    const pairs = [];
+    for (let i = 0; i < dayPunches.length; i += 2) {
+        const inPunch = dayPunches[i];
+        const outPunch = dayPunches[i + 1] || null;
+        pairs.push({ inPunch, outPunch });
+    }
+
     // Extract times (max 2 pairs mapped to entrada1/saida1, entrada2/saida2)
     const pair1 = pairs[0] || {};
     const pair2 = pairs[1] || {};
@@ -208,9 +208,8 @@ async function updateWorkdayFromPairs(employeeId, date, pairs) {
         status = workedMinutes > 0 ? 'OK' : 'OK'; // Holidays/Weekends are OK even with 0 hours
     } else if (pairs.length >= 2 && entrada1 && saida1 && entrada2 && saida2) {
         status = 'OK';
-    } else if (pairs.length === 1 && entrada1 && saida1) {
-        // If there's only one shift expected, it could be OK, but we stick to the check.
-        // For now, if worked >= expected, we could mark as OK too.
+    } else if (dayPunches.length === 2 && entrada1 && saida1) {
+        // Simple case: 1 shift day
         if (workedMinutes >= expectedMinutes) status = 'OK';
     }
 

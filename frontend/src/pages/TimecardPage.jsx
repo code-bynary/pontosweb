@@ -105,7 +105,7 @@ export default function TimecardPage() {
                         ← Voltar
                     </button>
                     <h1 className="text-3xl font-bold text-primary-600">
-                        Cartão de Ponto <span className="text-sm font-normal text-gray-400 ml-2">v1.4.0</span>
+                        Cartão de Ponto <span className="text-sm font-normal text-gray-400 ml-2">v1.5.0</span>
                     </h1>
                     <p className="text-gray-600 mt-1">
                         {timecard.employee.name} ({timecard.employee.enNo})
