@@ -1,4 +1,5 @@
 import { generatePDFTimecard, generateExcelTimecard } from '../services/exportService.js';
+import prisma from '../utils/prisma.js';
 
 /**
  * Export timecard as PDF
@@ -10,8 +11,14 @@ export async function exportPDF(req, res) {
 
         const pdfBuffer = await generatePDFTimecard(employeeId, year, monthNum);
 
+        const employee = await prisma.employee.findUnique({
+            where: { id: parseInt(employeeId) }
+        });
+        const employeeName = employee ? employee.name.replace(/\s+/g, '_') : 'Funcionario';
+        const fileName = `Cartao_Ponto_${employeeName}_${month}.pdf`;
+
         res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename=timecard-${employeeId}-${month}.pdf`);
+        res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
         res.send(pdfBuffer);
     } catch (error) {
         console.error('Export PDF error:', error);
@@ -29,8 +36,14 @@ export async function exportExcel(req, res) {
 
         const excelBuffer = await generateExcelTimecard(employeeId, year, monthNum);
 
+        const employee = await prisma.employee.findUnique({
+            where: { id: parseInt(employeeId) }
+        });
+        const employeeName = employee ? employee.name.replace(/\s+/g, '_') : 'Funcionario';
+        const fileName = `Cartao_Ponto_${employeeName}_${month}.xlsx`;
+
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', `attachment; filename=timecard-${employeeId}-${month}.xlsx`);
+        res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
         res.send(excelBuffer);
     } catch (error) {
         console.error('Export Excel error:', error);

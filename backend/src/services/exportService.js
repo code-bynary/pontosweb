@@ -9,7 +9,7 @@ export async function generatePDFTimecard(employeeId, year, month) {
     const data = await getMonthlyTimecard(employeeId, year, month);
 
     return new Promise((resolve, reject) => {
-        const doc = new PDFDocument({ margin: 50 });
+        const doc = new PDFDocument({ margin: 30 });
         const chunks = [];
 
         doc.on('data', chunk => chunks.push(chunk));
@@ -17,29 +17,29 @@ export async function generatePDFTimecard(employeeId, year, month) {
         doc.on('error', reject);
 
         // Header
-        doc.fontSize(20).text('Cartão de Ponto', { align: 'center' });
-        doc.moveDown();
-        doc.fontSize(12).text(`Funcionário: ${data.employee.name} (${data.employee.enNo})`);
+        doc.fontSize(16).text('Cartão de Ponto', { align: 'center' });
+        doc.moveDown(0.5);
+        doc.fontSize(10).text(`Funcionário: ${data.employee.name} (${data.employee.enNo})`);
         doc.text(`Período: ${data.month}`);
-        doc.moveDown();
+        doc.moveDown(0.5);
 
         // Table header
         const tableTop = doc.y;
-        const colWidths = [80, 60, 60, 60, 60, 60];
-        const headers = ['Data', 'Entrada 1', 'Saída 1', 'Entrada 2', 'Saída 2', 'Total'];
+        const colWidths = [80, 50, 50, 50, 50, 50];
+        const headers = ['Data', 'Entr 1', 'Saíd 1', 'Entr 2', 'Saíd 2', 'Total'];
 
-        let x = 50;
+        let x = 40;
         headers.forEach((header, i) => {
-            doc.fontSize(10).font('Helvetica-Bold').text(header, x, tableTop, { width: colWidths[i] });
+            doc.fontSize(9).font('Helvetica-Bold').text(header, x, tableTop, { width: colWidths[i] });
             x += colWidths[i];
         });
 
         // Table rows
-        let y = tableTop + 20;
+        let y = tableTop + 15;
         doc.font('Helvetica');
 
         data.workdays.forEach(wd => {
-            x = 50;
+            x = 40;
             const row = [
                 wd.date,
                 wd.entrada1 || '-',
@@ -50,55 +50,51 @@ export async function generatePDFTimecard(employeeId, year, month) {
             ];
 
             row.forEach((cell, i) => {
-                doc.fontSize(9).text(cell, x, y, { width: colWidths[i] });
+                doc.fontSize(8).text(cell, x, y, { width: colWidths[i] });
                 x += colWidths[i];
             });
 
-            y += 20;
+            y += 14;
 
-            // New page if needed
-            if (y > 700) {
+            // Page break only if truly necessary
+            if (y > 750) {
                 doc.addPage();
-                y = 50;
+                y = 30;
             }
         });
 
         // Total
-        doc.moveDown();
-        doc.fontSize(12).font('Helvetica-Bold').text(`Total do Mês: ${data.totalHours}h`, { align: 'right' });
+        doc.moveDown(0.5);
+        doc.fontSize(10).font('Helvetica-Bold').text(`Total do Mês: ${data.totalHours}h`, { align: 'right' });
 
-        // Summary Stats
-        doc.addPage();
-        doc.fontSize(16).font('Helvetica-Bold').text('Resumo Mensal', { underline: true });
+        // Summary Stats (On the same page)
         doc.moveDown();
+        const statsY = doc.y;
 
-        doc.fontSize(11).font('Helvetica-Bold');
-        doc.text(`Total Esperado: `, { continued: true }).font('Helvetica').text(`${data.totalExpectedHours}h`);
-        doc.font('Helvetica-Bold').text(`Total Trabalhado: `, { continued: true }).font('Helvetica').text(`${data.totalHours}h`);
-        doc.font('Helvetica-Bold').text(`Total Abonado: `, { continued: true }).font('Helvetica').text(`${data.stats.totalAbonoHours}h`);
+        doc.fontSize(12).font('Helvetica-Bold').text('Resumo Mensal', 40, statsY, { underline: true });
         doc.moveDown(0.5);
 
-        doc.font('Helvetica-Bold').text(`Total de Horas Extras: `, { continued: true }).font('Helvetica').fillColor('green').text(`${data.stats.totalExtraHours}h`).fillColor('black');
-        doc.font('Helvetica-Bold').text(`Total de Atrasos/Faltas (+Abonos): `, { continued: true }).font('Helvetica').fillColor('red').text(`${data.stats.totalDelayHours}h`).fillColor('black');
-        doc.moveDown();
+        const summaryX = 40;
+        doc.fontSize(9).font('Helvetica-Bold');
+        doc.text(`Total Esperado: `, summaryX, doc.y, { continued: true }).font('Helvetica').text(`${data.totalExpectedHours}h`);
+        doc.font('Helvetica-Bold').text(`Total Trabalhado: `, { continued: true }).font('Helvetica').text(`${data.totalHours}h`);
+        doc.font('Helvetica-Bold').text(`Total Abonado: `, { continued: true }).font('Helvetica').text(`${data.stats.totalAbonoHours}h`);
 
-        doc.fontSize(12).font('Helvetica-Bold').text(`Saldo Final do Mês: `, { continued: true }).fillColor(data.totalBalanceMinutes >= 0 ? 'green' : 'red').text(`${data.totalBalanceHours}h`).fillColor('black');
+        doc.font('Helvetica-Bold').text(`Horas Extras: `, { continued: true }).font('Helvetica').fillColor('green').text(`${data.stats.totalExtraHours}h`).fillColor('black');
+        doc.font('Helvetica-Bold').text(`Atrasos/Faltas: `, { continued: true }).font('Helvetica').fillColor('red').text(`${data.stats.totalDelayHours}h`).fillColor('black');
 
+        doc.fontSize(11).font('Helvetica-Bold').text(`Saldo Final: `, { continued: true }).fillColor(data.totalBalanceMinutes >= 0 ? 'green' : 'red').text(`${data.totalBalanceHours}h`).fillColor('black');
+
+        // Signature Area (Compact)
         doc.moveDown(2);
-        doc.fontSize(10).font('Helvetica-Bold').text('Contagem de Abonos:');
-        doc.font('Helvetica').text(`- Dias Inteiros: ${data.stats.abonoByCategory.FULL_DAY}`);
-        doc.text(`- Abonos Parciais: ${data.stats.abonoByCategory.PARTIAL}`);
+        const signatureY = doc.y + 20;
+        doc.moveTo(40, signatureY).lineTo(220, signatureY).stroke();
+        doc.moveTo(350, signatureY).lineTo(530, signatureY).stroke();
 
-        // Signature Area
-        doc.moveDown(4);
-        const signatureY = doc.y;
-        doc.moveTo(100, signatureY).lineTo(300, signatureY).stroke();
-        doc.moveTo(350, signatureY).lineTo(550, signatureY).stroke();
+        doc.fontSize(8).font('Helvetica-Bold').text('Assinatura do Colaborador', 40, signatureY + 5, { width: 180, align: 'center' });
+        doc.text('Assinatura do Responsável', 350, signatureY + 5, { width: 180, align: 'center' });
 
-        doc.fontSize(10).text('Assinatura do Colaborador', 100, signatureY + 5, { width: 200, align: 'center' });
-        doc.text('Assinatura do Responsável', 350, signatureY + 5, { width: 200, align: 'center' });
-
-        doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}`, 50, doc.page.height - 50, { align: 'center' });
+        doc.fontSize(7).font('Helvetica').text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')} | PontosWeb v1.3.8`, 40, doc.page.height - 30, { align: 'center' });
 
         doc.end();
     });
