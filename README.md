@@ -1,7 +1,8 @@
+```
 # PontosWeb 🕒
 
-[![Versão](https://img.shields.io/badge/vers%C3%A3o-v1.5.0-blue?style=for-the-badge)
-![Status](https://img.shields.io/badge/status-est%C3%A1vel-green?style=for-the-badge)
+[![Version](https://img.shields.io/badge/version-1.7.6-blue.svg)
+![Build](https://img.shields.io/badge/build-stable-green.svg)
 ![Milestone](https://img.shields.io/badge/milestone-inteligencia-gold?style=for-the-badge)
 
 > [!IMPORTANT]
@@ -71,7 +72,7 @@ chmod +x install-debian.sh
 
 ---
 
-© 2026 PontosWeb - Versão Estável 1.5.0
+© 2026 PontosWeb - Versão Estável 1.7.6
 
 ## 📋 Funcionalidades
 
@@ -256,25 +257,25 @@ GET /api/export/excel/:employeeId/:month      # Download Excel
 
 ## 🎯 Como Usar
 
-1. **Importar Arquivo**
-   - Acesse a página inicial
-   - Clique em "Selecionar arquivo" e escolha um arquivo .txt
-   - Clique em "Enviar Arquivo"
-   - O sistema processará as batidas e criará/atualizará funcionários
+1.  **Importar Arquivo**
+    - Acesse a página inicial
+    - Clique em "Selecionar arquivo" e escolha um arquivo .txt
+    - Clique em "Enviar Arquivo"
+    - O sistema processará as batidas e criará/atualizará funcionários
 
-2. **Visualizar Cartão de Ponto**
-   - Na lista de funcionários, clique em "Ver Cartão"
-   - Navegue entre meses usando os botões
-   - Visualize todas as jornadas do mês
+2.  **Visualizar Cartão de Ponto**
+    - Na lista de funcionários, clique em "Ver Cartão"
+    - Navegue entre meses usando os botões
+    - Visualize todas as jornadas do mês
 
-3. **Editar Horários**
-   - No cartão de ponto, clique em "Editar" na linha desejada
-   - Altere os horários conforme necessário
-   - Clique em "Salvar" para confirmar
+3.  **Editar Horários**
+    - No cartão de ponto, clique em "Editar" na linha desejada
+    - Altere os horários conforme necessário
+    - Clique em "Salvar" para confirmar
 
-4. **Exportar Relatórios**
-   - No cartão de ponto, clique em "Exportar PDF" ou "Exportar Excel"
-   - O arquivo será baixado automaticamente
+4.  **Exportar Relatórios**
+    - No cartão de ponto, clique em "Exportar PDF" ou "Exportar Excel"
+    - O arquivo será baixado automaticamente
 
 ## 🔄 Versionamento e Atualizações
 
@@ -286,7 +287,7 @@ O projeto segue [Semantic Versioning](https://semver.org/):
 - **MINOR**: Novas funcionalidades (compatíveis)
 - **PATCH**: Correções de bugs
 
-**Versão Atual**: v1.5.0
+**Versão Atual**: v1.7.6
 
 Ver todas as versões: [Releases](https://github.com/code-bynary/pontosweb/releases)
 
@@ -317,13 +318,13 @@ cd ~/pontosweb
 ```
 
 **O que o script faz:**
-1. ✅ Backup automático do sistema (`~/backup/sys`)
-2. ✅ Backup automático do banco de dados (`~/backup/db`)
-3. ✅ Mantém últimos 5 backups
-4. ✅ Atualiza código do GitHub
-5. ✅ Instala novas dependências
-6. ✅ Executa migrations do banco
-7. ✅ Reinicia serviços
+1.  ✅ Backup automático do sistema (`~/backup/sys`)
+2.  ✅ Backup automático do banco de dados (`~/backup/db`)
+3.  ✅ Mantém últimos 5 backups
+4.  ✅ Atualiza código do GitHub
+5.  ✅ Instala novas dependências
+6.  ✅ Executa migrations do banco
+7.  ✅ Reinicia serviços
 
 ### Restaurar Backup
 
@@ -348,6 +349,15 @@ Menu interativo permite restaurar:
 
 ### Changelog
 
+#### v1.7.6 (2026-02-02)
+- ✅ Abonos Visualmente Identificados (Ícones 🏥🏠 e Cores 🔴🟢🟡).
+
+#### v1.6.0 (2026-02-02)
+- ✅ Fluxo de Conferência Mensal (Checklist de RH).
+
+#### v1.5.0 (2026-02-02)
+- ✅ Refatoração da lógica de batidas (Agrupamento por dia, Deduplicação).
+
 #### v1.4.0 (2026-02-02)
 - ✅ Módulo de Relatórios Gerenciais (Visão Macro)
 - ✅ Exportação Excel Consolidada (Empresa)
@@ -364,17 +374,11 @@ Menu interativo permite restaurar:
 - ✅ Scripts de instalação e atualização
 - ✅ Documentação completa
 
-## 🔮 Expansões Futuras
-
-- [ ] Banco de horas (saldo acumulado)
-- [ ] Configuração de tolerância de minutos
-- [ ] Gestão de escalas e turnos
-- [ ] Relatórios de horas extras
-- [ ] Dashboard com gráficos
-- [ ] Autenticação e autorização
-- [ ] Multi-empresa/departamento
-- [ ] Notificações de inconsistências
-- [ ] App mobile
+## 🛣️ Roadmap v2.0.0 (Próximos Passos)
+- [ ] **Módulo de RH Master**: Cadastro completo de funcionários (Salário, CPF, Documentos).
+- [ ] **Dashboard visual Premium**: KPI Cards com indicadores em tempo real.
+- [ ] **Cálculo de Proventos**: Horas Extras 60/100%, Faltas e DSR automático.
+- [ ] **Tolerância Inteligente**: Filtro para batidas antecipadas acidentais.
 
 ## 📄 Licença
 
