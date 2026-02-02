@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getMonthlyTimecard, downloadPDF, downloadExcel, recalculateWorkdays } from '../services/api';
 import WorkdayRow from '../components/WorkdayRow';
+import AbonoModal from '../components/AbonoModal';
 import { format, addMonths, subMonths } from 'date-fns';
 
 export default function TimecardPage() {
@@ -10,6 +11,7 @@ export default function TimecardPage() {
     const [timecard, setTimecard] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedWorkday, setSelectedWorkday] = useState(null);
 
     const loadTimecard = async () => {
         setLoading(true);
@@ -164,12 +166,12 @@ export default function TimecardPage() {
                         <table className="table">
                             <thead>
                                 <tr>
-                                    <th>Data</th>
                                     <th>Entrada 1</th>
                                     <th>Saída 1</th>
                                     <th>Entrada 2</th>
                                     <th>Saída 2</th>
                                     <th>Trabalhado</th>
+                                    <th>Abonado</th>
                                     <th>Previsto</th>
                                     <th>Extra</th>
                                     <th>Saldo</th>
@@ -183,6 +185,7 @@ export default function TimecardPage() {
                                         key={workday.id}
                                         workday={workday}
                                         onUpdate={loadTimecard}
+                                        onAbono={() => setSelectedWorkday(workday)}
                                     />
                                 ))}
                             </tbody>
@@ -214,6 +217,14 @@ export default function TimecardPage() {
                     </div>
                 </div>
             </div>
+
+            {selectedWorkday && (
+                <AbonoModal
+                    workday={selectedWorkday}
+                    onClose={() => setSelectedWorkday(null)}
+                    onSuccess={loadTimecard}
+                />
+            )}
         </div>
     );
 }

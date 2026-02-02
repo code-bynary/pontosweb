@@ -93,4 +93,36 @@ export const deleteHoliday = async (id) => {
     return response.data;
 };
 
+// Abono API functions
+export const getAbono = async (workdayId) => {
+    const response = await api.get(`/abonos/workday/${workdayId}`);
+    return response.data;
+};
+
+export const createAbono = async (abonoData) => {
+    const response = await api.post('/abonos', abonoData);
+    return response.data;
+};
+
+export const uploadAbonoDocument = async (abonoId, file) => {
+    const formData = new FormData();
+    formData.append('document', file);
+
+    const response = await api.post(`/abonos/${abonoId}/upload`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+    return response.data;
+};
+
+export const downloadAbonoDocument = (workdayId) => {
+    window.open(`${API_BASE_URL}/abonos/workday/${workdayId}/download`, '_blank');
+};
+
+export const deleteAbono = async (id) => {
+    const response = await api.delete(`/abonos/${id}`);
+    return response.data;
+};
+
 export default api;

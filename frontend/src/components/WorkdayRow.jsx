@@ -11,7 +11,7 @@ const formatMinutes = (total) => {
     return `${sign}${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 };
 
-export default function WorkdayRow({ workday, onUpdate }) {
+export default function WorkdayRow({ workday, onUpdate, onAbono }) {
     const [editing, setEditing] = useState(false);
     const [values, setValues] = useState({
         entrada1: workday.entrada1 || '',
@@ -109,6 +109,14 @@ export default function WorkdayRow({ workday, onUpdate }) {
                 )}
             </td>
             <td className="font-medium">{workday.totalHours}</td>
+            <td className={workday.abonoMinutes > 0 ? 'text-blue-600 font-medium' : 'text-gray-400'}>
+                {workday.abonoMinutes > 0 ? formatMinutes(workday.abonoMinutes) : '-'}
+                {workday.abono && (
+                    <span className="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                        ABONADO
+                    </span>
+                )}
+            </td>
             <td className="text-gray-600 text-sm">
                 {formatMinutes(workday.expectedMinutes)}
             </td>
@@ -140,12 +148,21 @@ export default function WorkdayRow({ workday, onUpdate }) {
                         </button>
                     </div>
                 ) : (
-                    <button
-                        onClick={handleEdit}
-                        className="btn btn-secondary text-xs px-2 py-1"
-                    >
-                        Editar
-                    </button>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={handleEdit}
+                            className="btn btn-secondary text-xs px-2 py-1"
+                        >
+                            Editar
+                        </button>
+                        <button
+                            onClick={onAbono}
+                            className="btn btn-primary text-xs px-2 py-1"
+                            title={workday.abono ? 'Gerenciar abono' : 'Abonar dia'}
+                        >
+                            {workday.abono ? '📋' : '➕'} Abono
+                        </button>
+                    </div>
                 )}
             </td>
         </tr>
