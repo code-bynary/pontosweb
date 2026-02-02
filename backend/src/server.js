@@ -5,6 +5,7 @@ import employeeRoutes from './routes/employee.js';
 import workdayRoutes from './routes/workday.js';
 import exportRoutes from './routes/export.js';
 import holidayRoutes from './routes/holiday.js';
+import abonoRoutes from './routes/abono.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -26,6 +27,7 @@ app.use('/api/employees', employeeRoutes);
 app.use('/api/workday', workdayRoutes);
 app.use('/api/export', exportRoutes);
 app.use('/api/holidays', holidayRoutes);
+app.use('/api/abonos', abonoRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

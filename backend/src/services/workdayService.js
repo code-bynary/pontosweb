@@ -17,13 +17,17 @@ export async function getMonthlyTimecard(employeeId, year, month) {
     const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
     const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59));
 
+    // Fetch workdays with abonos
     const workdays = await prisma.workday.findMany({
         where: {
-            employeeId: parseInt(employeeId),
+            employeeId,
             date: {
                 gte: startDate,
                 lte: endDate
             }
+        },
+        include: {
+            abono: true
         },
         orderBy: {
             date: 'asc'
@@ -50,20 +54,34 @@ export async function getMonthlyTimecard(employeeId, year, month) {
             name: employee.name
         },
         month: `${year}-${String(month).padStart(2, '0')}`,
-        workdays: workdays.map(wd => ({
-            id: wd.id,
-            date: wd.date.toISOString().split('T')[0],
-            entrada1: formatTime(wd.entrada1),
-            saida1: formatTime(wd.saida1),
-            entrada2: formatTime(wd.entrada2),
-            saida2: formatTime(wd.saida2),
-            workedMinutes: wd.workedMinutes,
-            expectedMinutes: wd.expectedMinutes,
-            extraMinutes: wd.extraMinutes,
-            balanceMinutes: wd.balanceMinutes,
-            totalHours: formatMins(wd.workedMinutes),
-            status: wd.status
-        })),
+        workdays: workdays.map(wd => {
+            const abonoMinutes = wd.abono?.minutes || 0;
+            const totalMinutes = wd.workedMinutes + abonoMinutes;
+            const balanceWithAbono = totalMinutes - wd.expectedMinutes;
+
+            return {
+                id: wd.id,
+                date: wd.date.toISOString().split('T')[0],
+                entrada1: formatTime(wd.entrada1),
+                saida1: formatTime(wd.saida1),
+                entrada2: formatTime(wd.entrada2),
+                saida2: formatTime(wd.saida2),
+                workedMinutes: wd.workedMinutes,
+                expectedMinutes: wd.expectedMinutes,
+                abonoMinutes: abonoMinutes,
+                totalMinutes: totalMinutes,
+                extraMinutes: wd.extraMinutes,
+                balanceMinutes: balanceWithAbono,
+                totalHours: formatMins(totalMinutes),
+                status: wd.status,
+                abono: wd.abono ? {
+                    id: wd.abono.id,
+                    type: wd.abono.type,
+                    reason: wd.abono.reason,
+                    document: wd.abono.document
+                } : null
+            };
+        }),
         totalMinutes: workedMinutes,
         totalExpectedMinutes: expectedMinutes,
         totalBalanceMinutes: balanceMinutes,
